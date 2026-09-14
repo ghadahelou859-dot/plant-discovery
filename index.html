@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#eef8ff" />
+  <title>أجزاء النبتة</title>
+  <meta name="description" content="تجربة تعليمية تفاعلية عن أجزاء النبتة للصف الثالث الابتدائي" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app" aria-live="polite">
+    <!-- 1) شاشة البداية -->
+    <section id="coverScreen" class="screen active" aria-label="شاشة البداية">
+      <div class="stage">
+        <img src="assets/cover.jpg" class="media cover-img" alt="محمد بجانب النبتة في درس أجزاء النبتة" />
+        <button id="startBtn" class="start-btn" aria-label="ابدأ تشغيل المقدمة">
+          <span>ابدأ</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 2) الفيديوهات -->
+    <section id="videoScreen" class="screen" aria-label="المقدمة المرئية">
+      <div class="stage video-stage">
+        <video id="video1" class="media" playsinline preload="auto" controlslist="nodownload noplaybackrate" disablepictureinpicture></video>
+        <video id="video2" class="media hidden" playsinline preload="auto" controlslist="nodownload noplaybackrate" disablepictureinpicture></video>
+        <div id="videoEndOverlay" class="end-overlay hidden">
+          <button id="discoverBtn" class="discover-btn">يلا نبدأ نكتشفها 🌱</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3) صفحة الأجزاء -->
+    <section id="partsScreen" class="screen" aria-label="أجزاء النبتة">
+      <div class="stage parts-stage">
+        <img src="assets/parts.jpg" class="media parts-img" alt="أجزاء النبتة: الجذور والساق والأوراق والزهرة والثمرة" />
+
+        <!-- الأزرار شفافة ومثبتة فوق كل جزء/تسمية بالصورة -->
+        <button class="hotspot hs-flower" data-part="flower" aria-label="انتقل إلى الزهرة"></button>
+        <button class="hotspot hs-fruit" data-part="fruit" aria-label="انتقل إلى الثمرة"></button>
+        <button class="hotspot hs-leaves" data-part="leaves" aria-label="انتقل إلى الأوراق"></button>
+        <button class="hotspot hs-stem" data-part="stem" aria-label="انتقل إلى الساق"></button>
+        <button class="hotspot hs-roots" data-part="roots" aria-label="انتقل إلى الجذور"></button>
+      </div>
+    </section>
+
+    <!-- صفحات مؤقتة لكل جزء؛ جاهزة لإضافة الفيديوهات لاحقًا -->
+    <section id="partDetail" class="screen detail-screen" aria-label="تفاصيل الجزء">
+      <div class="detail-card">
+        <button id="backBtn" class="back-btn" aria-label="العودة إلى أجزاء النبتة">← رجوع</button>
+        <div class="part-icon" id="partIcon">🌱</div>
+        <h1 id="partTitle">الجزء</h1>
+        <p id="partText">سنضيف هنا فيديو هذا الجزء ووظيفته.</p>
+        <div class="future-slot">مكان فيديو الجزء</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
