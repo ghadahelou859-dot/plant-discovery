@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#79c8f2" />
+  <title>هيا نكتشف أجزاء النبتة</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app" class="app">
+    <!-- 1) الغلاف -->
+    <section id="coverScreen" class="screen active" aria-label="بداية التجربة">
+      <div class="stage">
+        <img class="stage-media" src="cover.jpg" alt="مقدمة درس أجزاء النبتة" />
+        <button id="startBtn" class="hotspot start-hotspot" aria-label="ابدأ التجربة">
+          <span class="sr-only">ابدأ</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 2) الفيديوهان -->
+    <section id="videoScreen" class="screen" aria-label="الفيديو التعريفي">
+      <div class="video-stage">
+        <video id="introVideo" playsinline preload="auto" controlslist="nodownload noplaybackrate" disablepictureinpicture></video>
+        <button id="manualPlayBtn" class="manual-play hidden" type="button">اضغط لتشغيل الفيديو</button>
+        <button id="discoverBtn" class="discover-btn hidden" type="button">يلا نبدأ نكتشفها 🌱</button>
+      </div>
+    </section>
+
+    <!-- 3) صفحة أجزاء النبتة -->
+    <section id="partsScreen" class="screen" aria-label="أجزاء النبتة">
+      <div class="stage parts-stage">
+        <img class="stage-media" src="parts.png" alt="أجزاء النبتة: الجذور والساق والأوراق والزهرة والثمرة" />
+
+        <button class="hotspot part-hotspot flower" data-part="flower" aria-label="الزهرة"><span class="sr-only">الزهرة</span></button>
+        <button class="hotspot part-hotspot fruit" data-part="fruit" aria-label="الثمرة"><span class="sr-only">الثمرة</span></button>
+        <button class="hotspot part-hotspot leaves" data-part="leaves" aria-label="الأوراق"><span class="sr-only">الأوراق</span></button>
+        <button class="hotspot part-hotspot stem" data-part="stem" aria-label="الساق"><span class="sr-only">الساق</span></button>
+        <button class="hotspot part-hotspot roots" data-part="roots" aria-label="الجذور"><span class="sr-only">الجذور</span></button>
+      </div>
+    </section>
+
+    <!-- 4) صفحة الجزء المختار -->
+    <section id="detailScreen" class="screen detail-screen" aria-live="polite">
+      <div class="detail-card">
+        <button id="backBtn" class="back-btn" type="button">رجوع لأجزاء النبتة</button>
+        <div id="detailIcon" class="detail-icon" aria-hidden="true">🌱</div>
+        <h1 id="detailTitle">الجزء</h1>
+        <p id="detailText">سيظهر شرح الجزء هنا.</p>
+        <p class="next-note">هذه الصفحة جاهزة لإضافة فيديو قصير وصوت الجزء لاحقًا.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
