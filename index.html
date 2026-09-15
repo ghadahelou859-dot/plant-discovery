@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#7ecaf0" />
+  <meta name="theme-color" content="#79c8f2" />
   <title>هيا نكتشف أجزاء النبتة</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main id="app" class="app">
+
     <section id="coverScreen" class="screen active" aria-label="بداية التجربة">
       <div class="stage">
-        <img class="stage-media" src="cover.jpg" alt="المشهد الافتتاحي لدرس أجزاء النبتة" />
-        <button id="startBtn" class="hotspot start-hotspot" aria-label="ابدأ الاكتشاف">
-          <span class="sr-only">ابدأ الاكتشاف</span>
-        </button>
+        <img class="stage-media" src="cover.jpg" alt="مقدمة درس أجزاء النبتة" />
+        <button id="potStartBtn" class="pot-start-visible" type="button" aria-label="ابدأ الآن">ابدأ الآن</button>
+        <button id="startBtn" class="hotspot start-hotspot" type="button" aria-label="ابدأ الاكتشاف"><span class="sr-only">ابدأ الاكتشاف</span></button>
       </div>
     </section>
 
@@ -28,14 +28,15 @@
       </div>
     </section>
 
-    <section id="partsScreen" class="screen" aria-label="صفحة أجزاء النبتة">
+    <section id="partsScreen" class="screen" aria-label="أجزاء النبتة">
       <div class="stage parts-stage">
-        <img class="stage-media" src="parts.png" alt="صورة أجزاء النبتة" />
-        <button class="hotspot part-hotspot roots" data-part="roots" aria-label="الجذور"></button>
-        <button class="hotspot part-hotspot stem" data-part="stem" aria-label="الساق"></button>
-        <button class="hotspot part-hotspot leaves" data-part="leaves" aria-label="الأوراق"></button>
-        <button class="hotspot part-hotspot flower" data-part="flower" aria-label="الزهرة"></button>
-        <button class="hotspot part-hotspot fruit" data-part="fruit" aria-label="الثمرة"></button>
+        <img class="stage-media" src="parts.png" alt="أجزاء النبتة" />
+        <button class="hotspot part-hotspot flower" data-part="flower" type="button" aria-label="الزهرة"></button>
+        <button class="hotspot part-hotspot fruit" data-part="fruit" type="button" aria-label="الثمرة"></button>
+        <button class="hotspot part-hotspot leaves" data-part="leaves" type="button" aria-label="الأوراق"></button>
+        <button class="hotspot part-hotspot stem" data-part="stem" type="button" aria-label="الساق"></button>
+        <button class="hotspot part-hotspot roots" data-part="roots" type="button" aria-label="الجذور"></button>
+        <button id="quizFromPartsBtn" class="quiz-entry-btn" type="button">🏆 اختبر معلوماتك</button>
       </div>
     </section>
 
@@ -43,11 +44,40 @@
       <div class="stage detail-stage">
         <img id="detailImage" class="stage-media" src="seed.png" alt="شرح الجزء المختار" />
         <div class="detail-overlay">
-          <button id="backBtn" class="back-btn" type="button">← الرجوع للأجزاء</button>
+          <button id="backBtn" class="back-btn" type="button">رجوع للأجزاء</button>
+          <div class="narration-card" aria-live="polite"><strong>محمد يشرح:</strong><span id="narrationText"></span></div>
           <button id="nextBtn" class="next-btn" type="button">الجزء التالي ←</button>
         </div>
       </div>
     </section>
+
+    <section id="quizScreen" class="screen quiz-screen" aria-label="تحدي الأسئلة">
+      <div class="quiz-bg"></div>
+      <div class="quiz-shell">
+        <div class="quiz-topbar">
+          <div id="quizProgress" class="quiz-progress">سؤال 1 من 6</div>
+          <div id="timer" class="timer" aria-label="10 ثواني"><span id="timerNumber">10</span></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-badge">🌱 تحدي الباحث الصغير</div>
+          <h1 id="questionText" class="question-text"></h1>
+          <div id="answers" class="answers"></div>
+          <div id="feedback" class="feedback" aria-live="polite"></div>
+          <button id="nextQuestionBtn" class="next-question hidden" type="button">السؤال التالي</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen" aria-label="النتيجة">
+      <div class="result-card">
+        <div class="result-star">🏆</div>
+        <h1>أحسنت!</h1>
+        <p id="scoreText"></p>
+        <button id="restartQuizBtn" type="button">أعد التحدي</button>
+        <button id="returnPartsBtn" type="button">ارجع لأجزاء النبتة</button>
+      </div>
+    </section>
+
   </main>
   <script src="script.js"></script>
 </body>
