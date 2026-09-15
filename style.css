@@ -1,0 +1,39 @@
+*{box-sizing:border-box} html,body{margin:0;padding:0;width:100%;height:100%;background:#ffffff;font-family:Arial,"Noto Sans Arabic","Segoe UI",sans-serif;overflow:hidden}
+body{touch-action:manipulation}
+.app,.screen,.stage,.video-stage,.detail-stage{width:100%;height:100vh;height:100dvh;position:relative}
+.screen{display:none;background:#fff}
+.screen.active{display:block}
+.stage-media,.full-video{width:100%;height:100%;display:block;object-fit:cover;background:#fff}
+.hotspot{position:absolute;background:transparent;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hotspot:focus-visible,.back-btn:focus-visible,.next-btn:focus-visible,.manual-play:focus-visible,.discover-btn:focus-visible{outline:3px solid rgba(0,118,255,.55);outline-offset:2px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* الغلاف */
+.start-hotspot{left:40.5%;top:79%;width:18%;height:11%;border-radius:18px}
+
+/* شاشة الفيديو */
+.manual-play,.discover-btn,.back-btn,.next-btn{position:absolute;border:0;border-radius:999px;padding:14px 22px;font-size:18px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.manual-play{left:50%;top:50%;transform:translate(-50%,-50%);background:#ffffff;color:#0f3b63}
+.discover-btn{left:50%;bottom:6%;transform:translateX(-50%);background:#2fae60;color:#fff;min-width:260px}
+.hidden{display:none}
+
+/* صفحة الأجزاء */
+.part-hotspot.roots{left:33%;top:56%;width:22%;height:31%;border-radius:18px}
+.part-hotspot.stem{left:49%;top:28%;width:11%;height:44%;border-radius:18px}
+.part-hotspot.leaves{left:34%;top:18%;width:33%;height:24%;border-radius:18px}
+.part-hotspot.flower{left:46%;top:5%;width:17%;height:17%;border-radius:18px}
+.part-hotspot.fruit{left:62%;top:18%;width:17%;height:18%;border-radius:18px}
+
+/* شاشة التفاصيل */
+.detail-overlay{position:absolute;inset:0;pointer-events:none}
+.back-btn,.next-btn{pointer-events:auto;background:rgba(255,255,255,.94);color:#15456d}
+.back-btn{top:24px;right:24px}
+.next-btn{bottom:24px;left:24px;background:rgba(47,174,96,.95);color:#fff}
+
+@media (max-width:900px){
+  .manual-play,.discover-btn,.back-btn,.next-btn{font-size:16px;padding:12px 18px}
+  .discover-btn{min-width:220px}
+  .back-btn{top:14px;right:14px}
+  .next-btn{bottom:14px;left:14px}
+  .start-hotspot{left:37%;top:77.5%;width:26%;height:13%}
+}

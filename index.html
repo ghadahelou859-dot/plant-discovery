@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#7ecaf0" />
+  <title>هيا نكتشف أجزاء النبتة</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app" class="app">
+    <section id="coverScreen" class="screen active" aria-label="بداية التجربة">
+      <div class="stage">
+        <img class="stage-media" src="cover.jpg" alt="المشهد الافتتاحي لدرس أجزاء النبتة" />
+        <button id="startBtn" class="hotspot start-hotspot" aria-label="ابدأ الاكتشاف">
+          <span class="sr-only">ابدأ الاكتشاف</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="videoScreen" class="screen" aria-label="الفيديو التعريفي">
+      <div class="video-stage">
+        <video id="introVideo" class="full-video" playsinline preload="auto" controlslist="nodownload noplaybackrate" disablepictureinpicture>
+          <source src="intro.mp4" type="video/mp4" />
+        </video>
+        <button id="manualPlayBtn" class="manual-play hidden" type="button">اضغط لتشغيل الفيديو</button>
+        <button id="discoverBtn" class="discover-btn hidden" type="button">يلا نبدأ نكتشفها 🌱</button>
+      </div>
+    </section>
+
+    <section id="partsScreen" class="screen" aria-label="صفحة أجزاء النبتة">
+      <div class="stage parts-stage">
+        <img class="stage-media" src="parts.png" alt="صورة أجزاء النبتة" />
+        <button class="hotspot part-hotspot roots" data-part="roots" aria-label="الجذور"></button>
+        <button class="hotspot part-hotspot stem" data-part="stem" aria-label="الساق"></button>
+        <button class="hotspot part-hotspot leaves" data-part="leaves" aria-label="الأوراق"></button>
+        <button class="hotspot part-hotspot flower" data-part="flower" aria-label="الزهرة"></button>
+        <button class="hotspot part-hotspot fruit" data-part="fruit" aria-label="الثمرة"></button>
+      </div>
+    </section>
+
+    <section id="detailScreen" class="screen" aria-label="شرح الجزء">
+      <div class="stage detail-stage">
+        <img id="detailImage" class="stage-media" src="seed.png" alt="شرح الجزء المختار" />
+        <div class="detail-overlay">
+          <button id="backBtn" class="back-btn" type="button">← الرجوع للأجزاء</button>
+          <button id="nextBtn" class="next-btn" type="button">الجزء التالي ←</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
