@@ -52,7 +52,7 @@
   let currentPart = 'roots';
   let qIndex = 0;
   let score = 0;
-  let seconds = 10;
+  let seconds = 5;
   let timerId = null;
   let answered = false;
 
@@ -92,7 +92,7 @@
 
   function updateTimer(){
     timerNumber.textContent = seconds;
-    timer.style.setProperty('--p', `${seconds*10}%`);
+    timer.style.setProperty('--p', `${seconds*20}%`);
   }
 
   function timeUp(){
@@ -108,7 +108,7 @@
 
   function startTimer(){
     stopTimer();
-    seconds = 10;
+    seconds = 5;
     timer.classList.remove('expired');
     updateTimer();
     timerId = setInterval(()=>{
@@ -138,6 +138,55 @@
     startTimer();
   }
 
+  function playApplause(){
+    try{
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return;
+      const ctx = new Ctx();
+      const now = ctx.currentTime;
+      for(let i=0;i<16;i++){
+        const t = now + i*0.045 + Math.random()*0.018;
+        const dur = 0.045 + Math.random()*0.025;
+        const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate*dur), ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for(let j=0;j<data.length;j++){
+          const env = Math.pow(1-j/data.length, 2.2);
+          data[j] = (Math.random()*2-1)*env;
+        }
+        const src = ctx.createBufferSource();
+        src.buffer = buffer;
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 1200 + Math.random()*900;
+        filter.Q.value = 0.7;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.16 + Math.random()*0.08, t+0.006);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+        src.connect(filter).connect(gain).connect(ctx.destination);
+        src.start(t);
+      }
+      setTimeout(()=>ctx.close(),1400);
+    }catch(e){}
+  }
+
+  function celebrate(){
+    const layer = document.createElement('div');
+    layer.className = 'celebrate';
+    const icons = ['⭐','✨','🌟','👏'];
+    for(let i=0;i<18;i++){
+      const s = document.createElement('span');
+      s.textContent = icons[i%icons.length];
+      s.style.left = `${46 + (Math.random()*8-4)}%`;
+      s.style.top = `${48 + (Math.random()*8-4)}%`;
+      s.style.setProperty('--x', `${(Math.random()*360-180)}px`);
+      s.style.setProperty('--y', `${(Math.random()*-240-40)}px`);
+      layer.appendChild(s);
+    }
+    document.body.appendChild(layer);
+    setTimeout(()=>layer.remove(),1000);
+  }
+
   function chooseAnswer(btn, idx){
     if(answered) return;
     answered = true;
@@ -147,13 +196,15 @@
     all.forEach(b=>b.disabled=true);
     if(idx === item.correct){
       btn.classList.add('correct');
-      feedback.textContent = 'أحسنت! إجابة صحيحة 🌟';
+      feedback.textContent = 'أحسنت يا بطل! 🌟';
       feedback.className = 'feedback good';
       score += 1;
+      playApplause();
+      celebrate();
     }else{
       btn.classList.add('wrong');
       all[item.correct].classList.add('correct');
-      feedback.textContent = 'قريب جدًا! شاهد الإجابة الصحيحة 👀';
+      feedback.textContent = 'جرّب مرة ثانية 👀';
       feedback.className = 'feedback bad';
     }
     nextQuestionBtn.classList.remove('hidden');
@@ -195,7 +246,7 @@
     qIndex += 1;
     if(qIndex >= questions.length){
       stopTimer();
-      scoreText.textContent = `أجبت عن ${score} من ${questions.length} إجابات صحيحة.`;
+      scoreText.textContent = `جمعت ${score} نجمة من ${questions.length} ⭐`;
       show('result');
     }else{
       renderQuestion();
