@@ -5,16 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#79c8f2" />
   <title>هيا نكتشف أجزاء النبتة</title>
-  <link rel="stylesheet" href="style.css?v=20260915c" />
+  <link rel="stylesheet" href="style.css?v=20260916a" />
 </head>
 <body>
   <main id="app" class="app">
 
     <section id="coverScreen" class="screen active" aria-label="بداية التجربة">
-      <div class="stage">
+      <div class="stage cover-stage">
         <img class="stage-media" src="cover.jpg" alt="مقدمة درس أجزاء النبتة" />
         <button id="potStartBtn" class="pot-start-visible" type="button" aria-label="ابدأ الآن">ابدأ الآن</button>
-        <button id="startBtn" class="hotspot start-hotspot" type="button" aria-label="ابدأ الاكتشاف"><span class="sr-only">ابدأ الاكتشاف</span></button>
       </div>
     </section>
 
@@ -24,7 +23,16 @@
           <source src="intro.mp4" type="video/mp4" />
         </video>
         <button id="manualPlayBtn" class="manual-play hidden" type="button">اضغط لتشغيل الفيديو</button>
-        <button id="discoverBtn" class="discover-btn hidden" type="button">يلا نبدأ نكتشفها 🌱</button>
+      </div>
+    </section>
+
+    <section id="growthScreen" class="screen" aria-label="مراحل نمو النبتة">
+      <div class="video-stage growth-stage">
+        <video id="growthVideo" class="full-video" playsinline preload="auto" controlslist="nodownload noplaybackrate" disablepictureinpicture>
+          <source src="growth.mp4" type="video/mp4" />
+        </video>
+        <button id="growthPlayBtn" class="manual-play hidden" type="button">اضغط لتشغيل فيديو النمو</button>
+        <button id="discoverBtn" class="discover-btn hidden" type="button">ابدأ الاكتشاف 🌱</button>
       </div>
     </section>
 
@@ -56,7 +64,7 @@
       <div class="quiz-shell">
         <div class="quiz-topbar">
           <div id="quizProgress" class="quiz-progress">سؤال 1 من 6</div>
-          <div id="timer" class="timer" aria-label="5 ثواني"><span id="timerNumber">5</span></div>
+          <div id="timer" class="timer" aria-label="10 ثواني"><span id="timerNumber">10</span></div>
         </div>
         <div class="quiz-card">
           <div class="quiz-badge">🌱 تحدي الباحث الصغير</div>
@@ -68,17 +76,45 @@
       </div>
     </section>
 
-    <section id="resultScreen" class="screen result-screen" aria-label="النتيجة">
+    <section id="resultScreen" class="screen result-screen" aria-label="النتيجة والتقييم">
       <div class="result-card">
         <div class="result-star">🏆</div>
         <h1>أحسنت!</h1>
         <p id="scoreText"></p>
-        <button id="restartQuizBtn" type="button">أعد التحدي</button>
-        <button id="returnPartsBtn" type="button">ارجع لأجزاء النبتة</button>
+
+        <div class="rating-box">
+          <h2>قديش حبيت التجربة؟</h2>
+          <div id="ratingStars" class="rating-stars" role="group" aria-label="التقييم من خمس نجوم">
+            <button type="button" data-rating="1" aria-label="نجمة واحدة">★</button>
+            <button type="button" data-rating="2" aria-label="نجمتان">★</button>
+            <button type="button" data-rating="3" aria-label="ثلاث نجوم">★</button>
+            <button type="button" data-rating="4" aria-label="أربع نجوم">★</button>
+            <button type="button" data-rating="5" aria-label="خمس نجوم">★</button>
+          </div>
+          <button id="submitRatingBtn" class="submit-rating-btn" type="button">إرسال التقييم</button>
+          <div id="ratingStatus" class="rating-status" aria-live="polite"></div>
+        </div>
+
+        <div class="social-box">
+          <div class="social-label">تابعونا للمزيد 🌱</div>
+          <div class="social-icons">
+            <a href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.4" cy="6.6" r="1.1" class="fill-dot"></circle></svg>
+            </a>
+            <a href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v9.2a4.2 4.2 0 1 1-3-4V12a1.7 1.7 0 1 0 1 1.55V4h2Zm0 0c.5 2.2 1.8 3.6 4 4.2v2.7c-1.6-.2-2.9-.8-4-1.7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button id="restartQuizBtn" type="button">أعد التحدي</button>
+          <button id="returnPartsBtn" type="button">🌿 العودة إلى أجزاء النبتة</button>
+        </div>
       </div>
     </section>
 
   </main>
-  <script src="script.js?v=20260915c"></script>
+  <script src="script.js?v=20260916a"></script>
 </body>
 </html>
