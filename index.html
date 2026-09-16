@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#79c8f2" />
+  <meta name="theme-color" content="#174f3e" />
   <title>هيا نكتشف أجزاء النبتة</title>
-  <link rel="stylesheet" href="style.css?v=20260916f" />
+  <link rel="stylesheet" href="style.css?v=20260916g" />
 </head>
 <body>
   <main id="app" class="app">
@@ -46,9 +46,6 @@
           <button class="hotspot part-hotspot stem" data-part="stem" type="button" aria-label="الساق"></button>
           <button class="hotspot part-hotspot roots" data-part="roots" type="button" aria-label="الجذور"></button>
         </div>
-        <div id="partsChallengeBar" class="parts-toolbar hidden">
-          <button id="quizFromPartsBtn" class="quiz-entry-btn" type="button">🏆 ابدأ التحدي</button>
-        </div>
       </div>
     </section>
 
@@ -63,69 +60,72 @@
     </section>
 
     <section id="challengeScreen" class="screen challenge-screen" aria-label="جاهزين للتحدي">
-      <div class="challenge-card">
-        <div class="challenge-stickers" aria-hidden="true">
-          <span>🌱</span><span>🌿</span><span>🍃</span><span>🌼</span><span>🍅</span><span>🌱</span>
+      <div class="challenge-scene">
+        <div class="challenge-board">
+          <div class="challenge-title">جاهزين<br><span>للتحدّي؟</span></div>
+          <p>هيا نختبر معلوماتنا عن أجزاء النبتة</p>
+          <div class="challenge-icons" aria-hidden="true"><span>🌰</span><span>🌼</span><span>🍃</span><span>🌱</span><span>🪴</span><span>🏆</span></div>
+          <button id="beginChallengeBtn" class="challenge-start-btn" type="button">🌱 ابدأ التحدي</button>
         </div>
-        <h1>جاهزين للتحدي؟</h1>
-        <p>هيا نختبر معلوماتنا عن أجزاء النبتة 🌱</p>
-        <button id="beginChallengeBtn" class="challenge-start-btn" type="button">ابدأ التحدي 🏆</button>
+        <div class="plant-character" aria-hidden="true">🪴</div>
       </div>
     </section>
 
     <section id="quizScreen" class="screen quiz-screen" aria-label="تحدي الأسئلة">
-      <div class="quiz-bg"></div>
-      <div class="quiz-shell">
-        <div class="quiz-welcome-card"><div class="bear">🧸</div><div>شاركوا معنا يا أصدقاء 🌱</div></div>
-        <div class="quiz-topbar">
-          <div id="quizProgress" class="quiz-progress">سؤال 1 من 10</div>
-          <div id="timer" class="timer" aria-label="10 ثواني"><span id="timerNumber">10</span></div>
-        </div>
-        <div class="quiz-card">
-          <div class="quiz-badge">🌱 تحدي الباحث الصغير</div>
-          <h1 id="questionText" class="question-text"></h1>
-          <div id="answers" class="answers"></div>
-          <div id="feedback" class="feedback" aria-live="polite"></div>
-          <button id="nextQuestionBtn" class="next-question hidden" type="button">السؤال التالي</button>
-        </div>
+      <div class="quiz-design">
+        <aside class="quiz-boy"><div class="quiz-boy-crop"></div><div class="speech">أنت ممتاز!</div></aside>
+        <section class="quiz-main">
+          <header class="quiz-header">
+            <div><strong>اختبر معلوماتك</strong><span>هيا نرى ما تعلّمناه معًا!</span></div>
+            <div class="quiz-leaf">🌿</div>
+          </header>
+          <div class="quiz-topbar"><div id="quizProgress" class="quiz-progress">السؤال 1 من 10</div><div id="timer" class="timer"><span id="timerNumber">10</span><small>ثوانٍ فقط!</small></div></div>
+          <div class="quiz-card">
+            <h1 id="questionText" class="question-text"></h1>
+            <div id="answers" class="answers"></div>
+            <div id="feedback" class="feedback" aria-live="polite"></div>
+            <button id="nextQuestionBtn" class="next-question hidden" type="button">السؤال التالي ←</button>
+          </div>
+        </section>
+        <aside class="quiz-plant" aria-hidden="true">🪴</aside>
       </div>
     </section>
 
     <section id="resultScreen" class="screen result-screen" aria-label="النتيجة والتقييم">
-      <div class="result-card">
-        <div class="result-star">🏆</div>
-        <h1>أحسنت!</h1>
-        <p id="scoreText"></p>
-
-        <div class="rating-box">
-          <h2>قديش حبيت التجربة؟</h2>
-          <div class="rating-stars" role="group" aria-label="التقييم من خمس نجوم">
-            <button type="button" data-rating="1">★</button><button type="button" data-rating="2">★</button><button type="button" data-rating="3">★</button><button type="button" data-rating="4">★</button><button type="button" data-rating="5">★</button>
+      <div class="result-scene">
+        <aside class="result-boy"><div class="result-boy-crop"></div><div class="result-speech">ممتاز! أنا فخور بك!</div></aside>
+        <section class="result-panel">
+          <h1>أحسنت يا بطل!</h1>
+          <p class="result-sub">أنهيت تحدّي أجزاء النبتة بنجاح</p>
+          <div class="score-badge">رائع! <span id="scoreText"></span></div>
+          <div class="rating-box">
+            <h2>قيّم التجربة</h2>
+            <div class="rating-stars" role="group" aria-label="التقييم من خمس نجوم">
+              <button type="button" data-rating="1">★</button><button type="button" data-rating="2">★</button><button type="button" data-rating="3">★</button><button type="button" data-rating="4">★</button><button type="button" data-rating="5">★</button>
+            </div>
+            <div id="ratingStatus" class="rating-status" aria-live="polite">اختاروا عدد النجوم وسيتم الحفظ تلقائيًا.</div>
           </div>
-          <div id="ratingStatus" class="rating-status" aria-live="polite">اختاروا عدد النجوم وسيتم الحفظ تلقائيًا.</div>
-        </div>
-
-        <div class="idea-box">
-          <h2>عندك فكرة تساعدنا نطوّر التجربة؟ 🌱</h2>
-          <textarea id="ideaText" rows="3" maxlength="500" placeholder="اكتب فكرتك هون..."></textarea>
-          <button id="submitIdeaBtn" class="submit-idea-btn" type="button">أرسل فكرتك</button>
-          <div id="ideaStatus" class="idea-status" aria-live="polite"></div>
-        </div>
-
-        <div class="social-box"><div class="social-icons">
-          <a href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon">◎</a>
-          <a href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-icon">♪</a>
-          <a id="snapchatLink" href="https://www.snapchat.com/add/ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="Snapchat" class="social-icon">👻</a>
-        </div></div>
-
-        <div class="result-actions">
-          <button id="restartQuizBtn" type="button">أعد التحدي</button>
-          <button id="returnPartsBtn" type="button">🌿 العودة إلى أجزاء النبتة</button>
-        </div>
+          <div class="idea-box">
+            <h2>شاركنا أفكارك 🧸</h2>
+            <textarea id="ideaText" rows="2" maxlength="500" placeholder="اكتب فكرة أو ملاحظة جميلة..."></textarea>
+            <button id="submitIdeaBtn" class="submit-idea-btn" type="button">إرسال ✈️</button>
+            <div id="ideaStatus" class="idea-status" aria-live="polite"></div>
+          </div>
+          <div class="social-icons">
+            <a href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon instagram">◎</a>
+            <a href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-icon tiktok">♪</a>
+            <a id="snapchatLink" href="https://www.snapchat.com/add/ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="Snapchat" class="social-icon snapchat">👻</a>
+          </div>
+          <div class="result-actions">
+            <button id="restartQuizBtn" type="button">↻ اكتشف من جديد</button>
+            <button id="returnPartsBtn" type="button">📖 العودة للأجزاء</button>
+          </div>
+        </section>
+        <aside class="result-plant" aria-hidden="true">🪴</aside>
       </div>
     </section>
 
   </main>
-  <script src="script.js?v=20260916f"></script>
+  <script src="script.js?v=20260916g"></script>
 </body>
 </html>
