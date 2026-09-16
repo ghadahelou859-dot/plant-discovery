@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#79c8f2" />
   <title>هيا نكتشف أجزاء النبتة</title>
-  <link rel="stylesheet" href="style.css?v=20260916a" />
+  <link rel="stylesheet" href="style.css?v=20260916b" />
 </head>
 <body>
   <main id="app" class="app">
@@ -37,14 +37,19 @@
     </section>
 
     <section id="partsScreen" class="screen" aria-label="أجزاء النبتة">
-      <div class="stage parts-stage">
-        <img class="stage-media" src="parts.png" alt="أجزاء النبتة" />
-        <button class="hotspot part-hotspot flower" data-part="flower" type="button" aria-label="الزهرة"></button>
-        <button class="hotspot part-hotspot fruit" data-part="fruit" type="button" aria-label="الثمرة"></button>
-        <button class="hotspot part-hotspot leaves" data-part="leaves" type="button" aria-label="الأوراق"></button>
-        <button class="hotspot part-hotspot stem" data-part="stem" type="button" aria-label="الساق"></button>
-        <button class="hotspot part-hotspot roots" data-part="roots" type="button" aria-label="الجذور"></button>
-        <button id="quizFromPartsBtn" class="quiz-entry-btn" type="button">🏆 اختبر معلوماتك</button>
+      <div class="parts-layout">
+        <div id="partsCanvas" class="parts-canvas">
+          <img id="partsImage" class="parts-image" src="parts.png" alt="أجزاء النبتة" />
+          <button class="hotspot part-hotspot flower" data-part="flower" type="button" aria-label="الزهرة"></button>
+          <button class="hotspot part-hotspot fruit" data-part="fruit" type="button" aria-label="الثمرة"></button>
+          <button class="hotspot part-hotspot leaves" data-part="leaves" type="button" aria-label="الأوراق"></button>
+          <button class="hotspot part-hotspot stem" data-part="stem" type="button" aria-label="الساق"></button>
+          <button class="hotspot part-hotspot roots" data-part="roots" type="button" aria-label="الجذور"></button>
+        </div>
+        <div class="parts-toolbar">
+          <div class="quiz-invite">شاركوا معنا يا أصحاب 🌱</div>
+          <button id="quizFromPartsBtn" class="quiz-entry-btn" type="button">🏆 ابدأ التحدي</button>
+        </div>
       </div>
     </section>
 
@@ -53,7 +58,7 @@
         <img id="detailImage" class="stage-media" src="seed.png" alt="شرح الجزء المختار" />
         <div class="detail-overlay">
           <button id="backBtn" class="back-btn" type="button">رجوع للأجزاء</button>
-          <div class="narration-card" aria-live="polite"><strong>محمد يشرح:</strong><span id="narrationText"></span></div>
+          <div class="narration-card" aria-live="polite"><span id="narrationText"></span></div>
           <button id="nextBtn" class="next-btn" type="button">الجزء التالي ←</button>
         </div>
       </div>
@@ -91,18 +96,19 @@
             <button type="button" data-rating="4" aria-label="أربع نجوم">★</button>
             <button type="button" data-rating="5" aria-label="خمس نجوم">★</button>
           </div>
-          <button id="submitRatingBtn" class="submit-rating-btn" type="button">إرسال التقييم</button>
-          <div id="ratingStatus" class="rating-status" aria-live="polite"></div>
+          <div id="ratingStatus" class="rating-status" aria-live="polite">اختاروا عدد النجوم وسيتم الحفظ تلقائيًا.</div>
         </div>
 
         <div class="social-box">
-          <div class="social-label">تابعونا للمزيد 🌱</div>
           <div class="social-icons">
-            <a href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon">
+            <a href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon instagram" title="Instagram">
               <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.4" cy="6.6" r="1.1" class="fill-dot"></circle></svg>
             </a>
-            <a href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-icon">
+            <a href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-icon tiktok" title="TikTok">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v9.2a4.2 4.2 0 1 1-3-4V12a1.7 1.7 0 1 0 1 1.55V4h2Zm0 0c.5 2.2 1.8 3.6 4 4.2v2.7c-1.6-.2-2.9-.8-4-1.7"></path></svg>
+            </a>
+            <a href="https://www.snapchat.com/add/ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="Snapchat" class="social-icon snapchat" title="Snapchat">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2c-2.7 0-4.5 2.1-4.5 5.1 0 .7.1 1.4.1 2-.5.3-1.2.5-1.8.6-.5.1-.8.5-.7.9.1.6 1.2 1 2 1.2-.2.7-.8 1.7-2 2.6-.3.2-.2.7.1.9.7.5 1.6.4 2.3.7.5.2.8.8 1.2 1.2.8.8 1.8-.1 3.3-.1s2.5.9 3.3.1c.4-.4.7-1 1.2-1.2.7-.3 1.6-.2 2.3-.7.3-.2.4-.7.1-.9-1.2-.9-1.8-1.9-2-2.6.8-.2 1.9-.6 2-1.2.1-.4-.2-.8-.7-.9-.6-.1-1.3-.3-1.8-.6 0-.6.1-1.3.1-2 0-3-1.8-5.1-4.5-5.1Z"></path></svg>
             </a>
           </div>
         </div>
@@ -115,6 +121,6 @@
     </section>
 
   </main>
-  <script src="script.js?v=20260916a"></script>
+  <script src="script.js?v=20260916b"></script>
 </body>
 </html>
