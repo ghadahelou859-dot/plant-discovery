@@ -17,13 +17,12 @@
   const manualPlayBtn = document.getElementById('manualPlayBtn');
   const growthPlayBtn = document.getElementById('growthPlayBtn');
   const discoverBtn = document.getElementById('discoverBtn');
-  const partsCanvas = document.getElementById('partsCanvas');
-  const partsImage = document.getElementById('partsImage');
   const backBtn = document.getElementById('backBtn');
   const nextBtn = document.getElementById('nextBtn');
   const detailImage = document.getElementById('detailImage');
   const narrationText = document.getElementById('narrationText');
   const quizFromPartsBtn = document.getElementById('quizFromPartsBtn');
+  const partsChallengeBar = document.getElementById('partsChallengeBar');
   const quizProgress = document.getElementById('quizProgress');
   const timer = document.getElementById('timer');
   const timerNumber = document.getElementById('timerNumber');
@@ -36,6 +35,9 @@
   const returnPartsBtn = document.getElementById('returnPartsBtn');
   const ratingButtons = [...document.querySelectorAll('[data-rating]')];
   const ratingStatus = document.getElementById('ratingStatus');
+  const ideaText = document.getElementById('ideaText');
+  const submitIdeaBtn = document.getElementById('submitIdeaBtn');
+  const ideaStatus = document.getElementById('ideaStatus');
 
   const partOrder = ['roots','stem','leaves','flower','fruit'];
   const partInfo = {
@@ -44,14 +46,6 @@
     leaves: { img:'leaves.png', title:'الأوراق', text:'الأوراق تصنع غذاء النبتة بمساعدة ضوء الشمس.' },
     flower: { img:'flower.png', title:'الزهرة', text:'الزهرة تساعد النبتة على تكوين الثمار والبذور.' },
     fruit: { img:'fruit.png', title:'الثمرة', text:'الثمرة تحمل البذور وتحميها.' }
-  };
-
-  const hotspotMap = {
-    leaves:{left:34.3,top:21.8,width:16.4,height:12.5},
-    flower:{left:77.0,top:3.2,width:17.5,height:13.7},
-    fruit:{left:81.4,top:25.6,width:16.2,height:13.6},
-    stem:{left:76.4,top:47.8,width:15.8,height:13.4},
-    roots:{left:40.2,top:73.8,width:17.5,height:13.5}
   };
 
   const questions = [
@@ -71,31 +65,17 @@
   let answered = false;
   let selectedRating = 0;
   let ratingSaving = false;
+  const visitedParts = new Set();
 
   function show(name){
     Object.values(screens).forEach(s=>s.classList.remove('active'));
     screens[name].classList.add('active');
-    if(name === 'parts') requestAnimationFrame(positionPartHotspots);
+    if(name === 'parts') updateChallengeAvailability();
   }
 
-  function positionPartHotspots(){
-    if(!partsCanvas || !partsImage || !partsImage.naturalWidth || !partsImage.naturalHeight) return;
-    const box = partsCanvas.getBoundingClientRect();
-    const scale = Math.min(box.width / partsImage.naturalWidth, box.height / partsImage.naturalHeight);
-    const renderedW = partsImage.naturalWidth * scale;
-    const renderedH = partsImage.naturalHeight * scale;
-    const offsetX = (box.width - renderedW) / 2;
-    const offsetY = (box.height - renderedH) / 2;
-
-    document.querySelectorAll('.part-hotspot').forEach(btn=>{
-      const cfg = hotspotMap[btn.dataset.part];
-      if(!cfg) return;
-      btn.style.left = `${offsetX + renderedW * cfg.left / 100}px`;
-      btn.style.top = `${offsetY + renderedH * cfg.top / 100}px`;
-      btn.style.width = `${renderedW * cfg.width / 100}px`;
-      btn.style.height = `${renderedH * cfg.height / 100}px`;
-      btn.style.borderRadius = '30px';
-    });
+  function updateChallengeAvailability(){
+    const allVisited = partOrder.every(part=>visitedParts.has(part));
+    partsChallengeBar.classList.toggle('hidden', !allVisited);
   }
 
   async function playIntro(){
@@ -122,17 +102,24 @@
   function openPart(part){
     const info = partInfo[part];
     if(!info) return;
+
     currentPart = part;
+    visitedParts.add(part);
+
     detailImage.src = info.img;
     detailImage.alt = info.title;
     narrationText.textContent = info.text;
+
     const idx = partOrder.indexOf(part);
-    nextBtn.textContent = idx === partOrder.length - 1 ? 'شاركوا معنا يا أصحاب 🌱  ابدأ التحدي 🏆' : 'الجزء التالي ←';
+    nextBtn.textContent = idx === partOrder.length - 1 ? 'انتهينا من الأجزاء 🌱' : 'الجزء التالي ←';
     show('detail');
   }
 
   function stopTimer(){
-    if(timerId){ clearInterval(timerId); timerId = null; }
+    if(timerId){
+      clearInterval(timerId);
+      timerId = null;
+    }
   }
 
   function updateTimer(){
@@ -146,10 +133,12 @@
     stopTimer();
     timer.classList.add('expired');
     timerNumber.textContent = '0';
+
     const item = questions[qIndex];
     const all = [...answersEl.querySelectorAll('button')];
     all.forEach(b=>b.disabled = true);
     if(all[item.correct]) all[item.correct].classList.add('correct');
+
     feedback.textContent = `انتهى الوقت ⏰ الإجابة الصحيحة: ${item.a[item.correct]}`;
     feedback.className = 'feedback bad';
     nextQuestionBtn.classList.remove('hidden');
@@ -160,6 +149,7 @@
     seconds = 10;
     timer.classList.remove('expired');
     updateTimer();
+
     timerId = setInterval(()=>{
       seconds -= 1;
       updateTimer();
@@ -172,10 +162,12 @@
     feedback.textContent = '';
     feedback.className = 'feedback';
     nextQuestionBtn.classList.add('hidden');
+
     const item = questions[qIndex];
     quizProgress.textContent = `سؤال ${qIndex + 1} من ${questions.length}`;
     questionText.textContent = item.q;
     answersEl.innerHTML = '';
+
     item.a.forEach((label, idx)=>{
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -184,6 +176,7 @@
       btn.addEventListener('click',()=>chooseAnswer(btn, idx));
       answersEl.appendChild(btn);
     });
+
     startTimer();
   }
 
@@ -191,6 +184,7 @@
     try{
       const Ctx = window.AudioContext || window.webkitAudioContext;
       if(!Ctx) return;
+
       const ctx = new Ctx();
       const master = ctx.createGain();
       master.gain.value = 0.85;
@@ -202,16 +196,21 @@
           const dur = 0.06 + k * 0.012;
           const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
           const data = buffer.getChannelData(0);
+
           for(let i=0;i<data.length;i++){
             const env = Math.pow(1 - i / data.length, 3.1);
             data[i] = (Math.random() * 2 - 1) * env;
           }
+
           const src = ctx.createBufferSource();
           src.buffer = buffer;
           const hp = ctx.createBiquadFilter();
-          hp.type = 'highpass'; hp.frequency.value = 600;
+          hp.type = 'highpass';
+          hp.frequency.value = 600;
           const bp = ctx.createBiquadFilter();
-          bp.type = 'bandpass'; bp.frequency.value = 1450 + k * 430; bp.Q.value = .75;
+          bp.type = 'bandpass';
+          bp.frequency.value = 1450 + k * 430;
+          bp.Q.value = .75;
           const gain = ctx.createGain();
           gain.gain.setValueAtTime(.0001,t + offset);
           gain.gain.exponentialRampToValueAtTime(.27 * strength,t + offset + .005);
@@ -230,6 +229,7 @@
     const layer = document.createElement('div');
     layer.className = 'celebrate';
     const icons = ['⭐','✨','🌟','👏'];
+
     for(let i=0;i<18;i++){
       const s = document.createElement('span');
       s.textContent = icons[i % icons.length];
@@ -239,6 +239,7 @@
       s.style.setProperty('--y', `${Math.random()*-240 - 40}px`);
       layer.appendChild(s);
     }
+
     document.body.appendChild(layer);
     setTimeout(()=>layer.remove(),1000);
   }
@@ -247,9 +248,11 @@
     if(answered) return;
     answered = true;
     stopTimer();
+
     const item = questions[qIndex];
     const all = [...answersEl.querySelectorAll('button')];
     all.forEach(b=>b.disabled = true);
+
     if(idx === item.correct){
       btn.classList.add('correct');
       feedback.textContent = 'أحسنت يا بطل! 🌟';
@@ -263,6 +266,7 @@
       feedback.textContent = `الإجابة الصحيحة: ${item.a[item.correct]}`;
       feedback.className = 'feedback bad';
     }
+
     nextQuestionBtn.classList.remove('hidden');
   }
 
@@ -281,10 +285,12 @@
   function getVisitorKey(){
     const storageKey = 'invitation_visitor_key';
     let visitorKey = localStorage.getItem(storageKey);
+
     if(!visitorKey){
       visitorKey = self.crypto?.randomUUID?.() || 'visitor-' + Date.now() + '-' + Math.random().toString(36).slice(2);
       localStorage.setItem(storageKey, visitorKey);
     }
+
     return visitorKey;
   }
 
@@ -299,6 +305,7 @@
       },
       body:JSON.stringify(body)
     });
+
     if(!response.ok) throw new Error(await response.text());
     const text = await response.text();
     return text ? JSON.parse(text) : null;
@@ -316,16 +323,20 @@
   }
 
   function paintRating(value){
-    ratingButtons.forEach(btn=>btn.classList.toggle('selected', Number(btn.dataset.rating) <= value));
+    ratingButtons.forEach(btn=>{
+      btn.classList.toggle('selected', Number(btn.dataset.rating) <= value);
+    });
   }
 
   async function saveRating(value){
     if(ratingSaving) return;
+
     ratingSaving = true;
     selectedRating = value;
     paintRating(value);
     ratingButtons.forEach(btn=>btn.disabled = true);
     ratingStatus.textContent = 'جاري حفظ التقييم…';
+
     try{
       await callInvitationRpc('submit_invitation_rating', {
         p_slug:INVITATION_SLUG,
@@ -345,6 +356,37 @@
   ratingButtons.forEach(btn=>{
     btn.addEventListener('click',()=>saveRating(Number(btn.dataset.rating)));
   });
+
+  async function submitIdea(){
+    const idea = ideaText.value.trim();
+
+    if(!idea){
+      ideaStatus.textContent = 'اكتب فكرتك أولًا 🌱';
+      ideaText.focus();
+      return;
+    }
+
+    submitIdeaBtn.disabled = true;
+    ideaStatus.textContent = 'جاري إرسال الفكرة…';
+
+    try{
+      await callInvitationRpc('submit_invitation_opinion', {
+        p_slug:INVITATION_SLUG,
+        p_visitor_key:VISITOR_KEY,
+        p_display_name:'زائر درس أجزاء النبتة',
+        p_opinion_text:`فكرة لتطوير التجربة: ${idea}`
+      });
+      ideaText.value = '';
+      ideaStatus.textContent = 'شكرًا! وصلت فكرتك 🌱✓';
+    }catch(error){
+      console.error('تعذر حفظ الفكرة:', error);
+      ideaStatus.textContent = 'تعذر الإرسال، حاول مرة ثانية.';
+    }finally{
+      submitIdeaBtn.disabled = false;
+    }
+  }
+
+  submitIdeaBtn.addEventListener('click', submitIdea);
 
   potStartBtn.addEventListener('click', startExperience);
   manualPlayBtn.addEventListener('click', playIntro);
@@ -369,15 +411,23 @@
   });
 
   backBtn.addEventListener('click',()=>show('parts'));
+
   nextBtn.addEventListener('click',()=>{
     const idx = partOrder.indexOf(currentPart);
-    if(idx === partOrder.length - 1) startQuiz();
-    else openPart(partOrder[idx + 1]);
+
+    if(idx === partOrder.length - 1){
+      show('parts');
+      return;
+    }
+
+    openPart(partOrder[idx + 1]);
   });
 
   quizFromPartsBtn.addEventListener('click', startQuiz);
+
   nextQuestionBtn.addEventListener('click',()=>{
     qIndex += 1;
+
     if(qIndex >= questions.length){
       stopTimer();
       scoreText.textContent = `جمعت ${score} نجمة من ${questions.length} ⭐`;
@@ -385,6 +435,8 @@
       paintRating(0);
       ratingButtons.forEach(btn=>btn.disabled = false);
       ratingStatus.textContent = 'اختاروا عدد النجوم وسيتم الحفظ تلقائيًا.';
+      ideaStatus.textContent = '';
+      ideaText.value = '';
       show('result');
     }else{
       renderQuestion();
@@ -393,9 +445,6 @@
 
   restartQuizBtn.addEventListener('click', startQuiz);
   returnPartsBtn.addEventListener('click',()=>show('parts'));
-
-  partsImage.addEventListener('load', positionPartHotspots);
-  window.addEventListener('resize', positionPartHotspots);
 
   window.addEventListener('pageshow',(e)=>{
     if(e.persisted){
