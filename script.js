@@ -20,7 +20,6 @@
   const backBtn = document.getElementById('backBtn');
   const nextBtn = document.getElementById('nextBtn');
   const detailImage = document.getElementById('detailImage');
-  const narrationText = document.getElementById('narrationText');
   const quizFromPartsBtn = document.getElementById('quizFromPartsBtn');
   const partsChallengeBar = document.getElementById('partsChallengeBar');
   const quizProgress = document.getElementById('quizProgress');
@@ -41,422 +40,121 @@
 
   const partOrder = ['roots','stem','leaves','flower','fruit'];
   const partInfo = {
-    roots: { img:'roots.png', title:'الجذور', text:'الجذور تثبّت النبتة في التربة وتمتص الماء والأملاح.' },
-    stem: { img:'stem.png', title:'الساق', text:'الساق يحمل أجزاء النبتة وينقل الماء والغذاء بينها.' },
-    leaves: { img:'leaves.png', title:'الأوراق', text:'الأوراق تصنع غذاء النبتة بمساعدة ضوء الشمس.' },
-    flower: { img:'flower.png', title:'الزهرة', text:'الزهرة تساعد النبتة على تكوين الثمار والبذور.' },
-    fruit: { img:'fruit.png', title:'الثمرة', text:'الثمرة تحمل البذور وتحميها.' }
+    roots:{img:'roots.png',title:'الجذور'}, stem:{img:'stem.png',title:'الساق'}, leaves:{img:'leaves.png',title:'الأوراق'}, flower:{img:'flower.png',title:'الزهرة'}, fruit:{img:'fruit.png',title:'الثمرة'}
   };
 
   const questions = [
-    { q:'أي جزء يثبّت النبتة في التربة ويمتص الماء؟', a:['الجذور','الزهرة','الثمرة'], correct:0 },
-    { q:'الساق ينقل الماء والغذاء بين أجزاء النبتة.', a:['نعم','لا'], correct:0 },
-    { q:'أي جزء يصنع غذاء النبتة بمساعدة ضوء الشمس؟', a:['الأوراق','الجذور','الثمرة'], correct:0 },
-    { q:'الزهرة تساعد النبتة على تكوين الثمار والبذور.', a:['نعم','لا'], correct:0 },
-    { q:'أي جزء يحمل البذور ويحميها؟', a:['الثمرة','الساق','الأوراق'], correct:0 },
-    { q:'من أين تبدأ حياة النبتة؟', a:['البذرة','الزهرة','الساق'], correct:0 }
+    {q:'أي جزء يثبّت النبتة في التربة ويمتص الماء؟', choices:['الجذور','الزهرة','الثمرة'], correct:'الجذور'},
+    {q:'الساق ينقل الماء والغذاء بين أجزاء النبتة.', choices:['نعم','لا'], correct:'نعم'},
+    {q:'أي جزء يصنع غذاء النبتة بمساعدة ضوء الشمس؟', choices:['الأوراق','الجذور','الثمرة'], correct:'الأوراق'},
+    {q:'الزهرة تساعد النبتة على تكوين الثمار والبذور.', choices:['نعم','لا'], correct:'نعم'},
+    {q:'أي جزء يحمل البذور ويحميها؟', choices:['الثمرة','الساق','الأوراق'], correct:'الثمرة'},
+    {q:'من أين تبدأ حياة النبتة؟', choices:['البذرة','الزهرة','الساق'], correct:'البذرة'},
+    {q:'أين تنمو الجذور غالبًا؟', choices:['داخل التربة','فوق الأوراق','داخل الزهرة'], correct:'داخل التربة'},
+    {q:'أي جزء يحمل الأوراق والزهور؟', choices:['الساق','الجذر','الثمرة'], correct:'الساق'},
+    {q:'هل تحتاج الأوراق إلى ضوء الشمس لتصنع الغذاء؟', choices:['نعم','لا'], correct:'نعم'},
+    {q:'بعد الزهرة، ماذا يمكن أن يتكوّن؟', choices:['الثمرة','الجذر','التربة'], correct:'الثمرة'}
   ];
 
-  let currentPart = 'roots';
-  let qIndex = 0;
-  let score = 0;
-  let seconds = 10;
-  let timerId = null;
-  let answered = false;
-  let selectedRating = 0;
-  let ratingSaving = false;
+  let currentPart='roots', qIndex=0, score=0, seconds=10, timerId=null, answered=false, currentAnswers=[], correctIndex=-1, ratingSaving=false;
   const visitedParts = new Set();
 
   function show(name){
     Object.values(screens).forEach(s=>s.classList.remove('active'));
     screens[name].classList.add('active');
-    if(name === 'parts') updateChallengeAvailability();
+    if(name==='parts') updateChallengeAvailability();
   }
 
   function updateChallengeAvailability(){
-    const allVisited = partOrder.every(part=>visitedParts.has(part));
-    partsChallengeBar.classList.toggle('hidden', !allVisited);
+    partsChallengeBar.classList.toggle('hidden', !partOrder.every(p=>visitedParts.has(p)));
   }
 
   async function playIntro(){
-    manualPlayBtn.classList.add('hidden');
-    introVideo.currentTime = 0;
-    try{ await introVideo.play(); }
-    catch(e){ manualPlayBtn.classList.remove('hidden'); }
+    manualPlayBtn.classList.add('hidden'); introVideo.currentTime=0;
+    try{await introVideo.play();}catch(e){manualPlayBtn.classList.remove('hidden');}
   }
-
-  async function startExperience(){
-    show('video');
-    await playIntro();
-  }
-
+  async function startExperience(){ show('video'); await playIntro(); }
   async function playGrowth(){
-    growthPlayBtn.classList.add('hidden');
-    discoverBtn.classList.add('hidden');
-    show('growth');
-    growthVideo.currentTime = 0;
-    try{ await growthVideo.play(); }
-    catch(e){ growthPlayBtn.classList.remove('hidden'); }
+    growthPlayBtn.classList.add('hidden'); discoverBtn.classList.add('hidden'); show('growth'); growthVideo.currentTime=0;
+    try{await growthVideo.play();}catch(e){growthPlayBtn.classList.remove('hidden');}
   }
 
   function openPart(part){
-    const info = partInfo[part];
-    if(!info) return;
-
-    currentPart = part;
-    visitedParts.add(part);
-
-    detailImage.src = info.img;
-    detailImage.alt = info.title;
-    narrationText.textContent = info.text;
-
-    const idx = partOrder.indexOf(part);
-    nextBtn.textContent = idx === partOrder.length - 1 ? 'انتهينا من الأجزاء 🌱' : 'الجزء التالي ←';
+    const info=partInfo[part]; if(!info)return;
+    currentPart=part; visitedParts.add(part); detailImage.src=info.img; detailImage.alt=info.title;
+    const idx=partOrder.indexOf(part);
+    nextBtn.textContent = idx===partOrder.length-1 ? 'انتهينا من الأجزاء 🌱' : 'الجزء التالي ←';
     show('detail');
   }
 
-  function stopTimer(){
-    if(timerId){
-      clearInterval(timerId);
-      timerId = null;
-    }
-  }
-
-  function updateTimer(){
-    timerNumber.textContent = seconds;
-    timer.style.setProperty('--p', `${seconds * 10}%`);
-  }
-
+  function stopTimer(){ if(timerId){clearInterval(timerId);timerId=null;} }
+  function updateTimer(){ timerNumber.textContent=seconds; timer.style.setProperty('--p',`${seconds*10}%`); }
+  function startTimer(){ stopTimer(); seconds=10; timer.classList.remove('expired'); updateTimer(); timerId=setInterval(()=>{seconds--;updateTimer();if(seconds<=0)timeUp();},1000); }
   function timeUp(){
-    if(answered) return;
-    answered = true;
-    stopTimer();
-    timer.classList.add('expired');
-    timerNumber.textContent = '0';
-
-    const item = questions[qIndex];
-    const all = [...answersEl.querySelectorAll('button')];
-    all.forEach(b=>b.disabled = true);
-    if(all[item.correct]) all[item.correct].classList.add('correct');
-
-    feedback.textContent = `انتهى الوقت ⏰ الإجابة الصحيحة: ${item.a[item.correct]}`;
-    feedback.className = 'feedback bad';
-    nextQuestionBtn.classList.remove('hidden');
+    if(answered)return; answered=true; stopTimer(); timer.classList.add('expired'); timerNumber.textContent='0';
+    const all=[...answersEl.querySelectorAll('button')]; all.forEach(b=>b.disabled=true); if(all[correctIndex]) all[correctIndex].classList.add('correct');
+    feedback.textContent=`انتهى الوقت ⏰ الإجابة الصحيحة: ${currentAnswers[correctIndex]}`; feedback.className='feedback bad'; nextQuestionBtn.classList.remove('hidden');
   }
 
-  function startTimer(){
-    stopTimer();
-    seconds = 10;
-    timer.classList.remove('expired');
-    updateTimer();
-
-    timerId = setInterval(()=>{
-      seconds -= 1;
-      updateTimer();
-      if(seconds <= 0) timeUp();
-    },1000);
+  function shuffle(arr){
+    const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;
   }
 
   function renderQuestion(){
-    answered = false;
-    feedback.textContent = '';
-    feedback.className = 'feedback';
-    nextQuestionBtn.classList.add('hidden');
-
-    const item = questions[qIndex];
-    quizProgress.textContent = `سؤال ${qIndex + 1} من ${questions.length}`;
-    questionText.textContent = item.q;
-    answersEl.innerHTML = '';
-
-    item.a.forEach((label, idx)=>{
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'answer-btn';
-      btn.textContent = label;
-      btn.addEventListener('click',()=>chooseAnswer(btn, idx));
-      answersEl.appendChild(btn);
-    });
-
+    answered=false; feedback.textContent=''; feedback.className='feedback'; nextQuestionBtn.classList.add('hidden');
+    const item=questions[qIndex]; quizProgress.textContent=`سؤال ${qIndex+1} من ${questions.length}`; questionText.textContent=item.q; answersEl.innerHTML='';
+    currentAnswers=shuffle(item.choices); correctIndex=currentAnswers.indexOf(item.correct);
+    currentAnswers.forEach((label,idx)=>{const btn=document.createElement('button');btn.type='button';btn.className='answer-btn';btn.textContent=label;btn.addEventListener('click',()=>chooseAnswer(btn,idx));answersEl.appendChild(btn);});
     startTimer();
   }
 
   function playApplause(){
-    try{
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if(!Ctx) return;
-
-      const ctx = new Ctx();
-      const master = ctx.createGain();
-      master.gain.value = 0.85;
-      master.connect(ctx.destination);
-      const now = ctx.currentTime;
-
-      const clap = (t, strength=1) => {
-        [0,0.014,0.03].forEach((offset,k)=>{
-          const dur = 0.06 + k * 0.012;
-          const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
-          const data = buffer.getChannelData(0);
-
-          for(let i=0;i<data.length;i++){
-            const env = Math.pow(1 - i / data.length, 3.1);
-            data[i] = (Math.random() * 2 - 1) * env;
-          }
-
-          const src = ctx.createBufferSource();
-          src.buffer = buffer;
-          const hp = ctx.createBiquadFilter();
-          hp.type = 'highpass';
-          hp.frequency.value = 600;
-          const bp = ctx.createBiquadFilter();
-          bp.type = 'bandpass';
-          bp.frequency.value = 1450 + k * 430;
-          bp.Q.value = .75;
-          const gain = ctx.createGain();
-          gain.gain.setValueAtTime(.0001,t + offset);
-          gain.gain.exponentialRampToValueAtTime(.27 * strength,t + offset + .005);
-          gain.gain.exponentialRampToValueAtTime(.0001,t + offset + dur);
-          src.connect(hp).connect(bp).connect(gain).connect(master);
-          src.start(t + offset);
-        });
-      };
-
-      [0,.11,.23,.36,.49,.63,.78,.94,1.12].forEach((d,i)=>clap(now+d, i%2 ? .82 : 1));
-      setTimeout(()=>ctx.close(),2000);
-    }catch(e){}
+    try{const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;const ctx=new Ctx();const now=ctx.currentTime;for(let i=0;i<12;i++){const t=now+i*.08;const dur=.055;const buffer=ctx.createBuffer(1,Math.floor(ctx.sampleRate*dur),ctx.sampleRate);const data=buffer.getChannelData(0);for(let j=0;j<data.length;j++)data[j]=(Math.random()*2-1)*Math.pow(1-j/data.length,3);const src=ctx.createBufferSource();src.buffer=buffer;const gain=ctx.createGain();gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.2,t+.005);gain.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(gain).connect(ctx.destination);src.start(t);}setTimeout(()=>ctx.close(),1600);}catch(e){}
   }
 
-  function celebrate(){
-    const layer = document.createElement('div');
-    layer.className = 'celebrate';
-    const icons = ['⭐','✨','🌟','👏'];
-
-    for(let i=0;i<18;i++){
-      const s = document.createElement('span');
-      s.textContent = icons[i % icons.length];
-      s.style.left = `${46 + (Math.random()*8 - 4)}%`;
-      s.style.top = `${48 + (Math.random()*8 - 4)}%`;
-      s.style.setProperty('--x', `${Math.random()*360 - 180}px`);
-      s.style.setProperty('--y', `${Math.random()*-240 - 40}px`);
-      layer.appendChild(s);
-    }
-
-    document.body.appendChild(layer);
-    setTimeout(()=>layer.remove(),1000);
-  }
-
-  function chooseAnswer(btn, idx){
-    if(answered) return;
-    answered = true;
-    stopTimer();
-
-    const item = questions[qIndex];
-    const all = [...answersEl.querySelectorAll('button')];
-    all.forEach(b=>b.disabled = true);
-
-    if(idx === item.correct){
-      btn.classList.add('correct');
-      feedback.textContent = 'أحسنت يا بطل! 🌟';
-      feedback.className = 'feedback good';
-      score += 1;
-      playApplause();
-      celebrate();
-    }else{
-      btn.classList.add('wrong');
-      all[item.correct].classList.add('correct');
-      feedback.textContent = `الإجابة الصحيحة: ${item.a[item.correct]}`;
-      feedback.className = 'feedback bad';
-    }
-
+  function chooseAnswer(btn,idx){
+    if(answered)return; answered=true; stopTimer(); const all=[...answersEl.querySelectorAll('button')]; all.forEach(b=>b.disabled=true);
+    if(idx===correctIndex){btn.classList.add('correct');feedback.textContent='أحسنت يا بطل! 🌟';feedback.className='feedback good';score++;playApplause();}
+    else{btn.classList.add('wrong');if(all[correctIndex])all[correctIndex].classList.add('correct');feedback.textContent=`الإجابة الصحيحة: ${currentAnswers[correctIndex]}`;feedback.className='feedback bad';}
     nextQuestionBtn.classList.remove('hidden');
   }
 
-  function startQuiz(){
-    qIndex = 0;
-    score = 0;
-    show('quiz');
-    renderQuestion();
-  }
+  function startQuiz(){ qIndex=0;score=0;show('quiz');renderQuestion(); }
 
-  /* Supabase */
-  const SUPABASE_URL = 'https://jzswtwicvgppisasrkqe.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_qJGOZoWBOrZ952qJnYTqNg_oaMSIStu';
-  const INVITATION_SLUG = 'plant-discovery';
-
-  function getVisitorKey(){
-    const storageKey = 'invitation_visitor_key';
-    let visitorKey = localStorage.getItem(storageKey);
-
-    if(!visitorKey){
-      visitorKey = self.crypto?.randomUUID?.() || 'visitor-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-      localStorage.setItem(storageKey, visitorKey);
-    }
-
-    return visitorKey;
-  }
-
-  const VISITOR_KEY = getVisitorKey();
-
-  async function callInvitationRpc(functionName, body){
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${functionName}`, {
-      method:'POST',
-      headers:{
-        apikey:SUPABASE_KEY,
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify(body)
-    });
-
-    if(!response.ok) throw new Error(await response.text());
-    const text = await response.text();
-    return text ? JSON.parse(text) : null;
-  }
-
-  async function recordView(){
-    try{
-      await callInvitationRpc('record_invitation_view', {
-        p_slug:INVITATION_SLUG,
-        p_visitor_key:VISITOR_KEY
-      });
-    }catch(error){
-      console.error('تعذر تسجيل الزيارة:', error);
-    }
-  }
-
-  function paintRating(value){
-    ratingButtons.forEach(btn=>{
-      btn.classList.toggle('selected', Number(btn.dataset.rating) <= value);
-    });
-  }
-
-  async function saveRating(value){
-    if(ratingSaving) return;
-
-    ratingSaving = true;
-    selectedRating = value;
-    paintRating(value);
-    ratingButtons.forEach(btn=>btn.disabled = true);
-    ratingStatus.textContent = 'جاري حفظ التقييم…';
-
-    try{
-      await callInvitationRpc('submit_invitation_rating', {
-        p_slug:INVITATION_SLUG,
-        p_visitor_key:VISITOR_KEY,
-        p_rating:value
-      });
-      ratingStatus.textContent = 'شكرًا! تم حفظ تقييمك ✓';
-    }catch(error){
-      console.error('تعذر حفظ التقييم:', error);
-      ratingStatus.textContent = 'تعذر الحفظ، اضغط على النجمة وحاول مرة ثانية.';
-    }finally{
-      ratingButtons.forEach(btn=>btn.disabled = false);
-      ratingSaving = false;
-    }
-  }
-
-  ratingButtons.forEach(btn=>{
-    btn.addEventListener('click',()=>saveRating(Number(btn.dataset.rating)));
-  });
+  const SUPABASE_URL='https://jzswtwicvgppisasrkqe.supabase.co';
+  const SUPABASE_KEY='sb_publishable_qJGOZoWBOrZ952qJnYTqNg_oaMSIStu';
+  const INVITATION_SLUG='plant-discovery';
+  function getVisitorKey(){const k='invitation_visitor_key';let v=localStorage.getItem(k);if(!v){v=self.crypto?.randomUUID?.()||'visitor-'+Date.now()+'-'+Math.random().toString(36).slice(2);localStorage.setItem(k,v);}return v;}
+  const VISITOR_KEY=getVisitorKey();
+  async function callInvitationRpc(name,body){const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error(await r.text());const t=await r.text();return t?JSON.parse(t):null;}
+  async function recordView(){try{await callInvitationRpc('record_invitation_view',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY});}catch(e){console.error(e);}}
+  function paintRating(value){ratingButtons.forEach(b=>b.classList.toggle('selected',Number(b.dataset.rating)<=value));}
+  async function saveRating(value){if(ratingSaving)return;ratingSaving=true;paintRating(value);ratingButtons.forEach(b=>b.disabled=true);ratingStatus.textContent='جاري حفظ التقييم…';try{await callInvitationRpc('submit_invitation_rating',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY,p_rating:value});ratingStatus.textContent='شكرًا! تم حفظ تقييمك ✓';}catch(e){ratingStatus.textContent='تعذر الحفظ، حاول مرة ثانية.';}finally{ratingButtons.forEach(b=>b.disabled=false);ratingSaving=false;}}
+  ratingButtons.forEach(b=>b.addEventListener('click',()=>saveRating(Number(b.dataset.rating))));
 
   async function submitIdea(){
-    const idea = ideaText.value.trim();
-
-    if(!idea){
-      ideaStatus.textContent = 'اكتب فكرتك أولًا 🌱';
-      ideaText.focus();
-      return;
-    }
-
-    submitIdeaBtn.disabled = true;
-    ideaStatus.textContent = 'جاري إرسال الفكرة…';
-
-    try{
-      await callInvitationRpc('submit_invitation_opinion', {
-        p_slug:INVITATION_SLUG,
-        p_visitor_key:VISITOR_KEY,
-        p_display_name:'زائر درس أجزاء النبتة',
-        p_opinion_text:`فكرة لتطوير التجربة: ${idea}`
-      });
-      ideaText.value = '';
-      ideaStatus.textContent = 'شكرًا! وصلت فكرتك 🌱✓';
-    }catch(error){
-      console.error('تعذر حفظ الفكرة:', error);
-      ideaStatus.textContent = 'تعذر الإرسال، حاول مرة ثانية.';
-    }finally{
-      submitIdeaBtn.disabled = false;
-    }
+    const idea=ideaText.value.trim(); if(!idea){ideaStatus.textContent='اكتب فكرتك أولًا 🌱';ideaText.focus();return;}
+    submitIdeaBtn.disabled=true; ideaStatus.textContent='جاري إرسال الفكرة…';
+    try{await callInvitationRpc('submit_invitation_opinion',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY,p_display_name:'زائر درس أجزاء النبتة',p_opinion_text:`فكرة لتطوير التجربة: ${idea}`});ideaText.value='';ideaStatus.textContent='شكرًا لمشاركتك! فكرتك وصلت إلينا 🌱💚';submitIdeaBtn.textContent='تم الإرسال ✓';}
+    catch(e){ideaStatus.textContent='تعذر الإرسال، حاول مرة ثانية.';}finally{submitIdeaBtn.disabled=false;}
   }
+  submitIdeaBtn.addEventListener('click',submitIdea);
 
-  submitIdeaBtn.addEventListener('click', submitIdea);
-
-  potStartBtn.addEventListener('click', startExperience);
-  manualPlayBtn.addEventListener('click', playIntro);
-  growthPlayBtn.addEventListener('click', playGrowth);
-
-  introVideo.addEventListener('ended', playGrowth);
-  introVideo.addEventListener('error',()=>{
-    manualPlayBtn.textContent = 'تعذر تشغيل المقدمة — اضغط للمحاولة';
-    manualPlayBtn.classList.remove('hidden');
-  });
-
+  potStartBtn.addEventListener('click',startExperience);
+  manualPlayBtn.addEventListener('click',playIntro);
+  growthPlayBtn.addEventListener('click',playGrowth);
+  introVideo.addEventListener('ended',playGrowth);
+  introVideo.addEventListener('error',()=>manualPlayBtn.classList.remove('hidden'));
   growthVideo.addEventListener('ended',()=>discoverBtn.classList.remove('hidden'));
-  growthVideo.addEventListener('error',()=>{
-    growthPlayBtn.classList.add('hidden');
-    discoverBtn.classList.remove('hidden');
-  });
-
+  growthVideo.addEventListener('error',()=>discoverBtn.classList.remove('hidden'));
   discoverBtn.addEventListener('click',()=>show('parts'));
 
-  document.querySelectorAll('.part-hotspot').forEach(btn=>{
-    btn.addEventListener('click',()=>openPart(btn.dataset.part));
-  });
-
+  document.querySelectorAll('.part-hotspot').forEach(btn=>btn.addEventListener('click',()=>openPart(btn.dataset.part)));
   backBtn.addEventListener('click',()=>show('parts'));
-
-  nextBtn.addEventListener('click',()=>{
-    const idx = partOrder.indexOf(currentPart);
-
-    if(idx === partOrder.length - 1){
-      show('parts');
-      return;
-    }
-
-    openPart(partOrder[idx + 1]);
-  });
-
-  quizFromPartsBtn.addEventListener('click', startQuiz);
-
-  nextQuestionBtn.addEventListener('click',()=>{
-    qIndex += 1;
-
-    if(qIndex >= questions.length){
-      stopTimer();
-      scoreText.textContent = `جمعت ${score} نجمة من ${questions.length} ⭐`;
-      selectedRating = 0;
-      paintRating(0);
-      ratingButtons.forEach(btn=>btn.disabled = false);
-      ratingStatus.textContent = 'اختاروا عدد النجوم وسيتم الحفظ تلقائيًا.';
-      ideaStatus.textContent = '';
-      ideaText.value = '';
-      show('result');
-    }else{
-      renderQuestion();
-    }
-  });
-
-  restartQuizBtn.addEventListener('click', startQuiz);
-  returnPartsBtn.addEventListener('click',()=>show('parts'));
-
-  window.addEventListener('pageshow',(e)=>{
-    if(e.persisted){
-      stopTimer();
-      introVideo.pause();
-      growthVideo.pause();
-      introVideo.currentTime = 0;
-      growthVideo.currentTime = 0;
-      discoverBtn.classList.add('hidden');
-      show('cover');
-    }
-  });
+  nextBtn.addEventListener('click',()=>{const idx=partOrder.indexOf(currentPart);if(idx===partOrder.length-1)show('parts');else openPart(partOrder[idx+1]);});
+  quizFromPartsBtn.addEventListener('click',startQuiz);
+  nextQuestionBtn.addEventListener('click',()=>{qIndex++;if(qIndex>=questions.length){stopTimer();scoreText.textContent=`جمعت ${score} نجمة من ${questions.length} ⭐`;paintRating(0);ratingStatus.textContent='اختاروا عدد النجوم وسيتم الحفظ تلقائيًا.';ideaStatus.textContent='';submitIdeaBtn.textContent='أرسل فكرتك';show('result');}else renderQuestion();});
+  restartQuizBtn.addEventListener('click',startQuiz); returnPartsBtn.addEventListener('click',()=>show('parts'));
 
   recordView();
 })();
