@@ -7,6 +7,7 @@
     growth: document.getElementById('growthScreen'),
     parts: document.getElementById('partsScreen'),
     detail: document.getElementById('detailScreen'),
+    challenge: document.getElementById('challengeScreen'),
     quiz: document.getElementById('quizScreen'),
     result: document.getElementById('resultScreen')
   };
@@ -21,6 +22,7 @@
   const nextBtn = document.getElementById('nextBtn');
   const detailImage = document.getElementById('detailImage');
   const quizFromPartsBtn = document.getElementById('quizFromPartsBtn');
+  const beginChallengeBtn = document.getElementById('beginChallengeBtn');
   const partsChallengeBar = document.getElementById('partsChallengeBar');
   const quizProgress = document.getElementById('quizProgress');
   const timer = document.getElementById('timer');
@@ -152,7 +154,8 @@
   document.querySelectorAll('.part-hotspot').forEach(btn=>btn.addEventListener('click',()=>openPart(btn.dataset.part)));
   backBtn.addEventListener('click',()=>show('parts'));
   nextBtn.addEventListener('click',()=>{const idx=partOrder.indexOf(currentPart);if(idx===partOrder.length-1)show('parts');else openPart(partOrder[idx+1]);});
-  quizFromPartsBtn.addEventListener('click',startQuiz);
+  quizFromPartsBtn.addEventListener('click',()=>show('challenge'));
+  beginChallengeBtn.addEventListener('click',startQuiz);
   nextQuestionBtn.addEventListener('click',()=>{qIndex++;if(qIndex>=questions.length){stopTimer();scoreText.textContent=`جمعت ${score} نجمة من ${questions.length} ⭐`;paintRating(0);ratingStatus.textContent='اختاروا عدد النجوم وسيتم الحفظ تلقائيًا.';ideaStatus.textContent='';submitIdeaBtn.textContent='أرسل فكرتك';show('result');}else renderQuestion();});
   restartQuizBtn.addEventListener('click',startQuiz); returnPartsBtn.addEventListener('click',()=>show('parts'));
 
