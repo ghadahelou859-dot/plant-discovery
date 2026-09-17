@@ -9,7 +9,8 @@ function layoutMappedElements(screenId,imageId){
   const ch=screen.clientHeight;
   const nw=image.naturalWidth;
   const nh=image.naturalHeight;
-  const scale=Math.max(cw/nw,ch/nh);
+  const contain=screen.classList.contains('contain-screen');
+  const scale=contain?Math.min(cw/nw,ch/nh):Math.max(cw/nw,ch/nh);
   const renderedW=nw*scale;
   const renderedH=nh*scale;
   const offsetX=(cw-renderedW)/2;
@@ -31,6 +32,7 @@ function layoutAllMappedElements(){
   layoutMappedElements('partsScreen','partsImage');
   layoutMappedElements('challengeScreen','challengeImage');
   layoutMappedElements('quizScreen','quizImage');
+  layoutMappedElements('resultScreen','resultImage');
 }
 
 const showScreen=id=>{
@@ -48,6 +50,7 @@ const showPartsBtn=document.getElementById('showPartsBtn');
 const partsImage=document.getElementById('partsImage');
 const challengeImage=document.getElementById('challengeImage');
 const quizImage=document.getElementById('quizImage');
+const resultImage=document.getElementById('resultImage');
 const detailImage=document.getElementById('detailImage');
 const detailBackBtn=document.getElementById('detailBackBtn');
 const detailNextBtn=document.getElementById('detailNextBtn');
@@ -61,16 +64,16 @@ const scoreText=document.getElementById('scoreText');
 const restartQuizBtn=document.getElementById('restartQuizBtn');
 const returnPartsBtn=document.getElementById('returnPartsBtn');
 const ratingStars=document.getElementById('ratingStars');
-const ratingMsg=document.getElementById('ratingMsg');
 const ideaInput=document.getElementById('ideaInput');
 const sendIdeaBtn=document.getElementById('sendIdeaBtn');
-const ideaMsg=document.getElementById('ideaMsg');
+const statusToast=document.getElementById('statusToast');
+const celebrationLayer=document.getElementById('celebrationLayer');
 const likeBtn=document.getElementById('likeBtn');
 const likeCount=document.getElementById('likeCount');
 
-[partsImage,challengeImage,quizImage].forEach(img=>img?.addEventListener('load',layoutAllMappedElements));
+[partsImage,challengeImage,quizImage,resultImage].forEach(img=>img?.addEventListener('load',layoutAllMappedElements));
 window.addEventListener('resize',layoutAllMappedElements);
-window.addEventListener('orientationchange',()=>setTimeout(layoutAllMappedElements,120));
+window.addEventListener('orientationchange',()=>setTimeout(layoutAllMappedElements,150));
 
 const parts=[
   {key:'roots',title:'الجذور',image:'roots.png'},
@@ -121,15 +124,66 @@ function shuffle(a){
   return arr;
 }
 
+let growthAudioCtx=null;
+let growthBeatTimer=null;
+let growthStep=0;
+function playGrowthNote(freq,duration=.16,volume=.035,type='triangle'){
+  if(!growthAudioCtx)return;
+  const osc=growthAudioCtx.createOscillator();
+  const gain=growthAudioCtx.createGain();
+  const now=growthAudioCtx.currentTime;
+  osc.type=type;
+  osc.frequency.setValueAtTime(freq,now);
+  gain.gain.setValueAtTime(0.0001,now);
+  gain.gain.exponentialRampToValueAtTime(volume,now+.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001,now+duration);
+  osc.connect(gain);gain.connect(growthAudioCtx.destination);
+  osc.start(now);osc.stop(now+duration+.03);
+}
+function startGrowthMusic(){
+  stopGrowthMusic();
+  try{
+    growthAudioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    growthStep=0;
+    const notes=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46];
+    const tick=()=>{
+      if(!growthAudioCtx)return;
+      playGrowthNote(notes[growthStep%notes.length],.19,.035,'triangle');
+      if(growthStep%2===0)playGrowthNote(notes[(growthStep+2)%notes.length]/2,.12,.018,'sine');
+      growthStep++;
+    };
+    tick();
+    growthBeatTimer=setInterval(tick,280);
+  }catch(e){}
+}
+function stopGrowthMusic(){
+  if(growthBeatTimer){clearInterval(growthBeatTimer);growthBeatTimer=null;}
+  if(growthAudioCtx){
+    try{growthAudioCtx.close();}catch(e){}
+    growthAudioCtx=null;
+  }
+}
+
 coverStartBtn.onclick=()=>showScreen('videoScreen');
 playIntroBtn.onclick=async()=>{playIntroBtn.classList.add('hidden');introVideo.currentTime=0;try{await introVideo.play();}catch{playIntroBtn.classList.remove('hidden')}};
 introVideo.onended=()=>goGrowthBtn.classList.remove('hidden');
 introVideo.onerror=()=>goGrowthBtn.classList.remove('hidden');
 goGrowthBtn.onclick=()=>showScreen('growthScreen');
-playGrowthBtn.onclick=async()=>{playGrowthBtn.classList.add('hidden');growthVideo.currentTime=0;try{await growthVideo.play();}catch{playGrowthBtn.classList.remove('hidden')}};
-growthVideo.onended=()=>showPartsBtn.classList.remove('hidden');
-growthVideo.onerror=()=>showPartsBtn.classList.remove('hidden');
-showPartsBtn.onclick=()=>showScreen('partsScreen');
+playGrowthBtn.onclick=async()=>{
+  playGrowthBtn.classList.add('hidden');
+  growthVideo.currentTime=0;
+  try{
+    startGrowthMusic();
+    await growthVideo.play();
+  }catch{
+    stopGrowthMusic();
+    playGrowthBtn.classList.remove('hidden');
+  }
+};
+growthVideo.onended=()=>{stopGrowthMusic();showPartsBtn.classList.remove('hidden')};
+growthVideo.onerror=()=>{stopGrowthMusic();showPartsBtn.classList.remove('hidden')};
+growthVideo.addEventListener('pause',()=>{if(!growthVideo.ended)stopGrowthMusic()});
+showPartsBtn.onclick=()=>{stopGrowthMusic();showScreen('partsScreen')};
 
 document.querySelectorAll('[data-part]').forEach(btn=>btn.onclick=()=>openPart(btn.dataset.part));
 function openPart(key){
@@ -151,14 +205,16 @@ detailNextBtn.onclick=()=>{
     showScreen('challengeScreen');
   }
 };
-beginQuizBtn.onclick=()=>startQuiz();
+beginQuizBtn.onclick=startQuiz;
 
 function startQuiz(){
   clearInterval(timer);
+  stopGrowthMusic();
   quizOrder=shuffle(questions);
   qIndex=0;
   score=0;
   timedOutCount=0;
+  clearCelebration();
   showScreen('quizScreen');
   renderQuestion();
 }
@@ -179,7 +235,6 @@ function renderQuestion(){
     const btn=document.createElement('button');
     btn.type='button';
     btn.className='answer-btn';
-
     const shell=document.createElement('span');
     shell.className='icon-shell';
     const img=document.createElement('img');
@@ -187,7 +242,6 @@ function renderQuestion(){
     img.src=opt.image;
     img.alt=opt.label;
     shell.appendChild(img);
-
     const label=document.createElement('span');
     label.className='label';
     label.textContent=opt.label;
@@ -217,9 +271,7 @@ function chooseAnswer(selected,correct){
 
 function addBadge(btn,src,alt){
   const img=document.createElement('img');
-  img.src=src;
-  img.alt=alt;
-  img.className='answer-badge';
+  img.src=src;img.alt=alt;img.className='answer-badge';
   btn.appendChild(img);
 }
 
@@ -228,25 +280,13 @@ function revealAnswer(selected,correct,isTimeout=false){
   [...answersEl.children].forEach(btn=>{
     btn.classList.add('disabled');
     const label=btn.querySelector('.label')?.textContent;
-    if(label===correct.label){
-      btn.classList.add('correct');
-      addBadge(btn,'correct-badge.png','صح');
-    }
-    if(selected&&label===selected.label&&selected.label!==correct.label){
-      btn.classList.add('wrong');
-      addBadge(btn,'wrong-badge.png','خطأ');
-    }
+    if(label===correct.label){btn.classList.add('correct');addBadge(btn,'correct-badge.png','صح');}
+    if(selected&&label===selected.label&&selected.label!==correct.label){btn.classList.add('wrong');addBadge(btn,'wrong-badge.png','خطأ');}
   });
 
-  if(selected&&selected.label===correct.label){
-    score++;
-    feedbackEl.textContent='أحسنت يا بطل 👏';
-    playClap();
-  }else if(isTimeout){
-    feedbackEl.textContent='انتهى الوقت ⏰';
-  }else{
-    feedbackEl.textContent='الإجابة الصحيحة مميزة بالأخضر';
-  }
+  if(selected&&selected.label===correct.label){score++;feedbackEl.textContent='أحسنت يا بطل 👏';playClap();}
+  else if(isTimeout){feedbackEl.textContent='انتهى الوقت ⏰';}
+  else{feedbackEl.textContent='الإجابة الصحيحة مميزة بالأخضر';}
 
   setTimeout(()=>{
     qIndex++;
@@ -257,14 +297,37 @@ function revealAnswer(selected,correct,isTimeout=false){
 
 function finishQuiz(){
   clearInterval(timer);
-  scoreText.textContent=`حصلت على ${score} من ${quizOrder.length} • انتهى الوقت في ${timedOutCount} سؤال`;
+  scoreText.textContent=String(score);
   ratingStars.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-  ratingMsg.textContent='';
-  ideaMsg.textContent='';
+  ideaInput.value='';
   showScreen('resultScreen');
+  if(score>8)setTimeout(startCelebration,250);
 }
 restartQuizBtn.onclick=startQuiz;
-returnPartsBtn.onclick=()=>showScreen('partsScreen');
+returnPartsBtn.onclick=()=>{clearCelebration();showScreen('partsScreen')};
+
+function showToast(message){
+  statusToast.textContent=message;
+  statusToast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t=setTimeout(()=>statusToast.classList.remove('show'),2200);
+}
+function clearCelebration(){celebrationLayer.innerHTML=''}
+function startCelebration(){
+  clearCelebration();
+  const colors=['#ffd43b','#55c76a','#ff7a7a','#54b8ff','#ffffff'];
+  for(let i=0;i<55;i++){
+    const p=document.createElement('i');
+    p.className='confetti-piece';
+    p.style.left=`${Math.random()*100}%`;
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDelay=`${Math.random()*.7}s`;
+    p.style.animationDuration=`${1.9+Math.random()*1.5}s`;
+    p.style.setProperty('--drift',`${-80+Math.random()*160}px`);
+    celebrationLayer.appendChild(p);
+  }
+  setTimeout(clearCelebration,3800);
+}
 
 const SUPABASE_URL='https://jzswtwicvgppisasrkqe.supabase.co';
 const SUPABASE_KEY='sb_publishable_qJGOZoWBOrZ952qJnYTqNg_oaMSIStu';
@@ -281,9 +344,7 @@ function getVisitorKey(){
 const VISITOR_KEY=getVisitorKey();
 async function callRpc(name,body){
   const res=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{
-    method:'POST',
-    headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify(body)
+    method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)
   });
   if(!res.ok)throw new Error(await res.text());
   const text=await res.text();
@@ -293,49 +354,39 @@ async function refreshLike(){
   try{
     const data=await callRpc('get_invitation_stats',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY});
     const row=Array.isArray(data)?data[0]:data;
-    if(row){
-      likeCount.textContent=row.like_count??0;
-      likeBtn.classList.toggle('liked',!!row.liked_by_me);
-    }
+    if(row){likeCount.textContent=row.like_count??0;likeBtn.classList.toggle('liked',!!row.liked_by_me);}
   }catch(e){console.error(e)}
 }
 likeBtn.onclick=async()=>{
   likeBtn.disabled=true;
-  try{
-    await callRpc('toggle_invitation_like',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY});
-    await refreshLike();
-  }catch(e){console.error(e)}
-  finally{likeBtn.disabled=false}
+  try{await callRpc('toggle_invitation_like',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY});await refreshLike();}
+  catch(e){console.error(e)}finally{likeBtn.disabled=false}
 };
 ratingStars.querySelectorAll('button').forEach(btn=>btn.onclick=async()=>{
   const r=+btn.dataset.rate;
   ratingStars.querySelectorAll('button').forEach(b=>b.classList.toggle('active',+b.dataset.rate<=r));
-  ratingMsg.textContent='جاري حفظ التقييم…';
+  showToast('جاري حفظ التقييم…');
   try{
     await callRpc('submit_invitation_rating',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY,p_rating:r});
-    ratingMsg.textContent='شكرًا! تم حفظ تقييمك ✓';
-  }catch(e){ratingMsg.textContent='تعذر الحفظ، حاولي مرة ثانية.'}
+    showToast('شكرًا! تم حفظ تقييمك ✓');
+  }catch(e){showToast('تعذر حفظ التقييم، حاولي مرة ثانية.')}
 });
 sendIdeaBtn.onclick=async()=>{
   const idea=ideaInput.value.trim();
-  if(!idea){ideaMsg.textContent='اكتب فكرتك أولًا 🌱';return}
+  if(!idea){showToast('اكتب فكرتك أولًا 🌱');return}
   sendIdeaBtn.disabled=true;
-  ideaMsg.textContent='جاري الإرسال…';
+  showToast('جاري الإرسال…');
   try{
     await callRpc('submit_invitation_opinion',{
-      p_slug:INVITATION_SLUG,
-      p_visitor_key:VISITOR_KEY,
-      p_display_name:'زائر درس أجزاء النبتة',
-      p_opinion_text:`فكرة لتطوير التجربة: ${idea}`
+      p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY,p_display_name:'زائر درس أجزاء النبتة',p_opinion_text:`فكرة لتطوير التجربة: ${idea}`
     });
     ideaInput.value='';
-    ideaMsg.textContent='شكرًا لمشاركتك! فكرتك وصلت إلينا 🌱💚';
-  }catch(e){ideaMsg.textContent='تعذر الإرسال، حاولي مرة ثانية.'}
+    showToast('شكرًا لمشاركتك! فكرتك وصلت إلينا 🌱💚');
+  }catch(e){showToast('تعذر الإرسال، حاولي مرة ثانية.')}
   finally{sendIdeaBtn.disabled=false}
 };
-async function recordView(){
-  try{await callRpc('record_invitation_view',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY})}catch(e){console.error(e)}
-}
+async function recordView(){try{await callRpc('record_invitation_view',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY})}catch(e){console.error(e)}}
+
 function playClap(){
   try{
     const ctx=new(window.AudioContext||window.webkitAudioContext)();
@@ -349,6 +400,7 @@ function playClap(){
     }
   }catch(e){}
 }
+
 recordView();
 refreshLike();
 layoutAllMappedElements();
