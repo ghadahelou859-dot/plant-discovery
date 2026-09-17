@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#194f3e" />
   <title>اكتشف أجزاء النبتة</title>
-  <link rel="stylesheet" href="style.css?v=20260917e" />
+  <link rel="stylesheet" href="style.css?v=20260917f" />
 </head>
 <body>
   <main id="app">
@@ -54,7 +54,7 @@
     </section>
 
     <section id="quizScreen" class="screen image-screen mapped-screen contain-screen">
-      <img id="quizImage" src="quiz-background-final.png?v=20260917e" alt="اختبر معلوماتك" class="screen-image mapped-image contain-image" />
+      <img id="quizImage" src="quiz-background-final.png?v=20260917f" alt="اختبر معلوماتك" class="screen-image mapped-image contain-image" />
       <div id="quizProgress" class="quiz-progress mapped-ui" data-x="0.715" data-y="0.145" data-w="0.105" data-h="0.060">1 / 10</div>
       <div id="timerClock" class="quiz-timer mapped-ui" data-x="0.875" data-y="0.115" data-w="0.070" data-h="0.110"><span id="timerNum">10</span></div>
       <div id="questionBox" class="question-box mapped-ui" data-x="0.265" data-y="0.265" data-w="0.540" data-h="0.120"><div id="questionText"></div></div>
@@ -62,13 +62,20 @@
       <div id="feedback" class="feedback mapped-ui" data-x="0.395" data-y="0.850" data-w="0.300" data-h="0.055"></div>
     </section>
 
-    <section id="resultScreen" class="screen image-screen mapped-screen contain-screen">
-      <img id="resultImage" src="result-page-final.png?v=20260917e" alt="أحسنت يا بطل" class="screen-image mapped-image contain-image" />
+    <section id="resultScreen" class="screen image-screen mapped-screen contain-screen result-fit-screen">
+      <img id="resultImage" src="result-page-final.png?v=20260917f" alt="أحسنت يا بطل" class="screen-image mapped-image contain-image result-fit-image" />
       <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
       <div id="scoreText" class="score-number mapped-ui" data-x="0.420" data-y="0.255" data-w="0.160" data-h="0.100"></div>
-      <div id="ratingStars" class="rating-hotspots mapped-ui" data-x="0.365" data-y="0.455" data-w="0.300" data-h="0.070">
-        <button data-rate="1" aria-label="نجمة واحدة"></button><button data-rate="2" aria-label="نجمتان"></button><button data-rate="3" aria-label="3 نجوم"></button><button data-rate="4" aria-label="4 نجوم"></button><button data-rate="5" aria-label="5 نجوم"></button>
+
+      <a id="whatsappContactBtn" class="whatsapp-cta mapped-ui" data-x="0.315" data-y="0.435" data-w="0.390" data-h="0.105" href="https://wa.me/970598494977" target="_blank" rel="noopener" aria-label="تواصل معنا عبر واتساب">
+        <span class="wa-icon">☎</span>
+        <span>تواصل معنا عبر واتساب</span>
+      </a>
+
+      <div id="ratingStars" class="hidden-rating" aria-hidden="true">
+        <button data-rate="1"></button><button data-rate="2"></button><button data-rate="3"></button><button data-rate="4"></button><button data-rate="5"></button>
       </div>
+
       <textarea id="ideaInput" class="idea-input mapped-ui" data-x="0.315" data-y="0.590" data-w="0.390" data-h="0.060" rows="2" placeholder="اكتب فكرتك هنا"></textarea>
       <button id="sendIdeaBtn" class="transparent-action mapped-ui" data-x="0.315" data-y="0.650" data-w="0.390" data-h="0.055" aria-label="إرسال الفكرة"></button>
       <a class="transparent-action mapped-ui" data-x="0.320" data-y="0.745" data-w="0.060" data-h="0.060" href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener" aria-label="Instagram"></a>
@@ -79,6 +86,6 @@
       <div id="statusToast" class="status-toast"></div>
     </section>
   </main>
-  <script src="script.js?v=20260917e"></script>
+  <script src="script.js?v=20260917f"></script>
 </body>
 </html>
