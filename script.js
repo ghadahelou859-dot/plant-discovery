@@ -1,5 +1,41 @@
 const screens=[...document.querySelectorAll('.screen')];
-const showScreen=id=>screens.forEach(s=>s.classList.toggle('active',s.id===id));
+
+function layoutMappedHotspots(screenId,imageId){
+  const screen=document.getElementById(screenId);
+  const image=document.getElementById(imageId);
+  if(!screen||!image||!image.naturalWidth||!screen.classList.contains('active'))return;
+
+  const cw=screen.clientWidth;
+  const ch=screen.clientHeight;
+  const nw=image.naturalWidth;
+  const nh=image.naturalHeight;
+  const scale=Math.max(cw/nw,ch/nh);
+  const renderedW=nw*scale;
+  const renderedH=nh*scale;
+  const offsetX=(cw-renderedW)/2;
+  const offsetY=(ch-renderedH)/2;
+
+  screen.querySelectorAll('.mapped-hotspot').forEach(btn=>{
+    const x=Number(btn.dataset.x||0);
+    const y=Number(btn.dataset.y||0);
+    const w=Number(btn.dataset.w||0);
+    const h=Number(btn.dataset.h||0);
+    btn.style.left=`${offsetX+(x*renderedW)}px`;
+    btn.style.top=`${offsetY+(y*renderedH)}px`;
+    btn.style.width=`${w*renderedW}px`;
+    btn.style.height=`${h*renderedH}px`;
+  });
+}
+
+function layoutAllHotspots(){
+  layoutMappedHotspots('partsScreen','partsImage');
+  layoutMappedHotspots('challengeScreen','challengeImage');
+}
+
+const showScreen=id=>{
+  screens.forEach(s=>s.classList.toggle('active',s.id===id));
+  requestAnimationFrame(()=>requestAnimationFrame(layoutAllHotspots));
+};
 
 const coverStartBtn=document.getElementById('coverStartBtn');
 const introVideo=document.getElementById('introVideo');
@@ -8,6 +44,8 @@ const goGrowthBtn=document.getElementById('goGrowthBtn');
 const growthVideo=document.getElementById('growthVideo');
 const playGrowthBtn=document.getElementById('playGrowthBtn');
 const showPartsBtn=document.getElementById('showPartsBtn');
+const partsImage=document.getElementById('partsImage');
+const challengeImage=document.getElementById('challengeImage');
 const detailImage=document.getElementById('detailImage');
 const detailBackBtn=document.getElementById('detailBackBtn');
 const detailNextBtn=document.getElementById('detailNextBtn');
@@ -27,6 +65,11 @@ const sendIdeaBtn=document.getElementById('sendIdeaBtn');
 const ideaMsg=document.getElementById('ideaMsg');
 const likeBtn=document.getElementById('likeBtn');
 const likeCount=document.getElementById('likeCount');
+
+partsImage?.addEventListener('load',layoutAllHotspots);
+challengeImage?.addEventListener('load',layoutAllHotspots);
+window.addEventListener('resize',layoutAllHotspots);
+window.addEventListener('orientationchange',()=>setTimeout(layoutAllHotspots,120));
 
 const parts=[
   {key:'roots',title:'الجذور',image:'roots.png'},
@@ -103,7 +146,7 @@ detailNextBtn.onclick=()=>{
     showScreen('challengeScreen');
   }
 };
-beginQuizBtn.onclick=startQuiz;
+beginQuizBtn.onclick=()=>startQuiz();
 
 function startQuiz(){
   clearInterval(timer);
@@ -297,3 +340,4 @@ function playClap(){
 }
 recordView();
 refreshLike();
+layoutAllHotspots();
