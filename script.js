@@ -1,6 +1,6 @@
 const screens=[...document.querySelectorAll('.screen')];
 
-function layoutMappedHotspots(screenId,imageId){
+function layoutMappedElements(screenId,imageId){
   const screen=document.getElementById(screenId);
   const image=document.getElementById(imageId);
   if(!screen||!image||!image.naturalWidth||!screen.classList.contains('active'))return;
@@ -15,26 +15,27 @@ function layoutMappedHotspots(screenId,imageId){
   const offsetX=(cw-renderedW)/2;
   const offsetY=(ch-renderedH)/2;
 
-  screen.querySelectorAll('.mapped-hotspot').forEach(btn=>{
-    const x=Number(btn.dataset.x||0);
-    const y=Number(btn.dataset.y||0);
-    const w=Number(btn.dataset.w||0);
-    const h=Number(btn.dataset.h||0);
-    btn.style.left=`${offsetX+(x*renderedW)}px`;
-    btn.style.top=`${offsetY+(y*renderedH)}px`;
-    btn.style.width=`${w*renderedW}px`;
-    btn.style.height=`${h*renderedH}px`;
+  screen.querySelectorAll('.mapped-hotspot,.mapped-ui').forEach(el=>{
+    const x=Number(el.dataset.x||0);
+    const y=Number(el.dataset.y||0);
+    const w=Number(el.dataset.w||0);
+    const h=Number(el.dataset.h||0);
+    el.style.left=`${offsetX+x*renderedW}px`;
+    el.style.top=`${offsetY+y*renderedH}px`;
+    el.style.width=`${w*renderedW}px`;
+    el.style.height=`${h*renderedH}px`;
   });
 }
 
-function layoutAllHotspots(){
-  layoutMappedHotspots('partsScreen','partsImage');
-  layoutMappedHotspots('challengeScreen','challengeImage');
+function layoutAllMappedElements(){
+  layoutMappedElements('partsScreen','partsImage');
+  layoutMappedElements('challengeScreen','challengeImage');
+  layoutMappedElements('quizScreen','quizImage');
 }
 
 const showScreen=id=>{
   screens.forEach(s=>s.classList.toggle('active',s.id===id));
-  requestAnimationFrame(()=>requestAnimationFrame(layoutAllHotspots));
+  requestAnimationFrame(()=>requestAnimationFrame(layoutAllMappedElements));
 };
 
 const coverStartBtn=document.getElementById('coverStartBtn');
@@ -46,6 +47,7 @@ const playGrowthBtn=document.getElementById('playGrowthBtn');
 const showPartsBtn=document.getElementById('showPartsBtn');
 const partsImage=document.getElementById('partsImage');
 const challengeImage=document.getElementById('challengeImage');
+const quizImage=document.getElementById('quizImage');
 const detailImage=document.getElementById('detailImage');
 const detailBackBtn=document.getElementById('detailBackBtn');
 const detailNextBtn=document.getElementById('detailNextBtn');
@@ -66,10 +68,9 @@ const ideaMsg=document.getElementById('ideaMsg');
 const likeBtn=document.getElementById('likeBtn');
 const likeCount=document.getElementById('likeCount');
 
-partsImage?.addEventListener('load',layoutAllHotspots);
-challengeImage?.addEventListener('load',layoutAllHotspots);
-window.addEventListener('resize',layoutAllHotspots);
-window.addEventListener('orientationchange',()=>setTimeout(layoutAllHotspots,120));
+[partsImage,challengeImage,quizImage].forEach(img=>img?.addEventListener('load',layoutAllMappedElements));
+window.addEventListener('resize',layoutAllMappedElements);
+window.addEventListener('orientationchange',()=>setTimeout(layoutAllMappedElements,120));
 
 const parts=[
   {key:'roots',title:'الجذور',image:'roots.png'},
@@ -80,23 +81,27 @@ const parts=[
 ];
 let currentPartIndex=0;
 
+const A={
+  roots:{label:'الجذور',image:'quiz-roots.png'},
+  stem:{label:'الساق',image:'quiz-stem.png'},
+  leaves:{label:'الأوراق',image:'quiz-leaves.png'},
+  flower:{label:'الزهرة',image:'quiz-flower.png'},
+  fruit:{label:'الثمرة',image:'quiz-fruit.png'},
+  seed:{label:'البذرة',image:'quiz-seed.png'}
+};
+const opt=(key,correct=false)=>({...A[key],correct});
+
 const questions=[
-  {type:'image',q:'ما الجزء الذي يثبت النبتة في التربة ويمتص الماء؟',options:[
-    {label:'الجذور',image:'quiz-roots.png',correct:true},{label:'الزهرة',image:'quiz-flower.png'},{label:'الساق',image:'quiz-stem.png'},{label:'الثمرة',image:'quiz-fruit.png'}]},
-  {type:'image',q:'ما الجزء الذي يحمل الأوراق والأزهار والثمار؟',options:[
-    {label:'الساق',image:'quiz-stem.png',correct:true},{label:'الأوراق',image:'quiz-leaves.png'},{label:'البذرة',image:'quiz-seed.png'},{label:'الجذور',image:'quiz-roots.png'}]},
-  {type:'image',q:'أي جزء يصنع غذاء النبتة؟',options:[
-    {label:'الأوراق',image:'quiz-leaves.png',correct:true},{label:'الثمرة',image:'quiz-fruit.png'},{label:'الزهرة',image:'quiz-flower.png'},{label:'الجذور',image:'quiz-roots.png'}]},
-  {type:'image',q:'من أي جزء تبدأ حياة النبتة؟',options:[
-    {label:'البذرة',image:'quiz-seed.png',correct:true},{label:'الأوراق',image:'quiz-leaves.png'},{label:'الساق',image:'quiz-stem.png'},{label:'الثمرة',image:'quiz-fruit.png'}]},
-  {type:'image',q:'أي جزء يتحول بعد ذلك إلى ثمرة؟',options:[
-    {label:'الزهرة',image:'quiz-flower.png',correct:true},{label:'الساق',image:'quiz-stem.png'},{label:'البذرة',image:'quiz-seed.png'},{label:'الجذور',image:'quiz-roots.png'}]},
-  {type:'image',q:'في أي جزء نجد البذور غالبًا؟',options:[
-    {label:'الثمرة',image:'quiz-fruit.png',correct:true},{label:'الزهرة',image:'quiz-flower.png'},{label:'الجذور',image:'quiz-roots.png'},{label:'الأوراق',image:'quiz-leaves.png'}]},
-  {type:'tf',q:'صح أم خطأ: الجذور توجد تحت التربة.',options:[{label:'صح',correct:true},{label:'خطأ'}]},
-  {type:'tf',q:'صح أم خطأ: الأوراق تمتص الماء من التربة.',options:[{label:'صح'},{label:'خطأ',correct:true}]},
-  {type:'text',q:'ما أول ما يظهر من البذرة عند النمو؟',options:[{label:'الجذر',correct:true},{label:'الثمرة'},{label:'الزهرة'},{label:'الورقة'}]},
-  {type:'text',q:'كم عدد أجزاء النبتة التي تعلمناها في هذا الدرس؟',options:[{label:'خمسة أجزاء',correct:true},{label:'جزءان'},{label:'سبعة أجزاء'},{label:'ثلاثة أجزاء'}]}
+  {q:'أي جزء يثبّت النبتة في التربة ويمتص الماء؟',options:[opt('roots',true),opt('stem'),opt('flower'),opt('fruit')]},
+  {q:'أي جزء يحمل الأوراق والأزهار والثمار؟',options:[opt('stem',true),opt('roots'),opt('leaves'),opt('seed')]},
+  {q:'أي جزء يصنع غذاء النبتة بمساعدة ضوء الشمس؟',options:[opt('leaves',true),opt('roots'),opt('fruit'),opt('flower')]},
+  {q:'من أي جزء تبدأ حياة النبتة؟',options:[opt('seed',true),opt('flower'),opt('stem'),opt('fruit')]},
+  {q:'أي جزء يساعد النبتة على تكوين الثمار والبذور؟',options:[opt('flower',true),opt('roots'),opt('stem'),opt('leaves')]},
+  {q:'أي جزء يحمل البذور ويحميها؟',options:[opt('fruit',true),opt('stem'),opt('leaves'),opt('roots')]},
+  {q:'أي جزء ينمو غالبًا داخل التربة؟',options:[opt('roots',true),opt('flower'),opt('fruit'),opt('leaves')]},
+  {q:'أي جزء ينقل الماء بين أجزاء النبتة؟',options:[opt('stem',true),opt('seed'),opt('flower'),opt('fruit')]},
+  {q:'أي جزء يحتاج إلى ضوء الشمس ليصنع الغذاء؟',options:[opt('leaves',true),opt('roots'),opt('seed'),opt('fruit')]},
+  {q:'بعد الزهرة، أي جزء يمكن أن يتكوّن؟',options:[opt('fruit',true),opt('roots'),opt('stem'),opt('seed')]}
 ];
 
 let quizOrder=[];
@@ -165,29 +170,33 @@ function renderQuestion(){
   timerNum.textContent=timeLeft;
   feedbackEl.textContent='';
   const q=quizOrder[qIndex];
-  quizProgress.textContent=`السؤال ${qIndex+1} من ${quizOrder.length}`;
+  quizProgress.textContent=`${qIndex+1} / ${quizOrder.length}`;
   questionText.textContent=q.q;
   answersEl.innerHTML='';
   const options=shuffle(q.options);
+
   options.forEach(opt=>{
     const btn=document.createElement('button');
     btn.type='button';
-    btn.className='answer-btn'+((q.type==='text'||q.type==='tf')?' text-only':'');
-    const label=document.createElement('div');
+    btn.className='answer-btn';
+
+    const shell=document.createElement('span');
+    shell.className='icon-shell';
+    const img=document.createElement('img');
+    img.className='option-img';
+    img.src=opt.image;
+    img.alt=opt.label;
+    shell.appendChild(img);
+
+    const label=document.createElement('span');
     label.className='label';
     label.textContent=opt.label;
-    if(q.type==='image'){
-      const img=document.createElement('img');
-      img.className='option-img';
-      img.src=opt.image;
-      img.alt=opt.label;
-      btn.append(img,label);
-    }else{
-      btn.append(label);
-    }
+    btn.append(shell,label);
     btn.onclick=()=>chooseAnswer(opt,q.options.find(o=>o.correct));
     answersEl.appendChild(btn);
   });
+
+  layoutAllMappedElements();
   timer=setInterval(()=>{
     timeLeft--;
     timerNum.textContent=timeLeft;
@@ -228,6 +237,7 @@ function revealAnswer(selected,correct,isTimeout=false){
       addBadge(btn,'wrong-badge.png','خطأ');
     }
   });
+
   if(selected&&selected.label===correct.label){
     score++;
     feedbackEl.textContent='أحسنت يا بطل 👏';
@@ -235,13 +245,14 @@ function revealAnswer(selected,correct,isTimeout=false){
   }else if(isTimeout){
     feedbackEl.textContent='انتهى الوقت ⏰';
   }else{
-    feedbackEl.textContent='إجابة غير صحيحة ❌';
+    feedbackEl.textContent='الإجابة الصحيحة مميزة بالأخضر';
   }
+
   setTimeout(()=>{
     qIndex++;
     if(qIndex>=quizOrder.length)finishQuiz();
     else renderQuestion();
-  },1600);
+  },1500);
 }
 
 function finishQuiz(){
@@ -340,4 +351,4 @@ function playClap(){
 }
 recordView();
 refreshLike();
-layoutAllHotspots();
+layoutAllMappedElements();
