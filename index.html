@@ -13,13 +13,13 @@
   <link rel="preload" as="image" href="quiz-seed-icon.png" />
   <link rel="preload" as="image" href="correct-badge.png" />
   <link rel="preload" as="image" href="wrong-badge.png" />
-  <link rel="stylesheet" href="style.css?v=20260917n" />
+  <link rel="stylesheet" href="style.css?v=20260918p" />
 </head>
 <body>
   <main id="app">
     <section id="coverScreen" class="screen active image-screen mapped-screen">
-      <img id="coverImage" src="cover.jpg?v=20260917n" alt="ابدأ الاكتشاف" class="screen-image mapped-image" />
-      <button id="coverStartBtn" class="hotspot mapped-hotspot" data-x="0.250" data-y="0.780" data-w="0.500" data-h="0.100" aria-label="ابدأ الاكتشاف"></button>
+      <img id="coverImage" src="cover.jpg?v=20260918p" data-desktop-src="cover.jpg?v=20260918p" data-mobile-src="cover-mobile.png?v=20260918p" alt="ابدأ الاكتشاف" class="screen-image mapped-image" />
+      <button id="coverStartBtn" class="hotspot mapped-hotspot" data-x="0.250" data-y="0.780" data-w="0.500" data-h="0.100" data-px="0.185" data-py="0.820" data-pw="0.630" data-ph="0.085" aria-label="ابدأ الاكتشاف"></button>
     </section>
 
     <section id="videoScreen" class="screen center-screen">
@@ -39,12 +39,12 @@
     </section>
 
     <section id="partsScreen" class="screen image-screen mapped-screen">
-      <img id="partsImage" src="parts.png" alt="أجزاء النبتة" class="screen-image mapped-image" />
-      <button class="hotspot mapped-hotspot" data-part="roots" data-x="0.397" data-y="0.748" data-w="0.190" data-h="0.145" aria-label="الجذور"></button>
-      <button class="hotspot mapped-hotspot" data-part="stem" data-x="0.745" data-y="0.455" data-w="0.190" data-h="0.155" aria-label="الساق"></button>
-      <button class="hotspot mapped-hotspot" data-part="leaves" data-x="0.335" data-y="0.205" data-w="0.185" data-h="0.155" aria-label="الأوراق"></button>
-      <button class="hotspot mapped-hotspot" data-part="flower" data-x="0.755" data-y="0.025" data-w="0.185" data-h="0.145" aria-label="الزهرة"></button>
-      <button class="hotspot mapped-hotspot" data-part="fruit" data-x="0.805" data-y="0.235" data-w="0.180" data-h="0.165" aria-label="الثمرة"></button>
+      <img id="partsImage" src="parts.png" data-desktop-src="parts.png" data-mobile-src="parts-mobile.png?v=20260918p" alt="أجزاء النبتة" class="screen-image mapped-image" />
+      <button class="hotspot mapped-hotspot" data-part="roots" data-x="0.397" data-y="0.748" data-w="0.190" data-h="0.145" data-px="0.700" data-py="0.650" data-pw="0.245" data-ph="0.075" aria-label="الجذور"></button>
+      <button class="hotspot mapped-hotspot" data-part="stem" data-x="0.745" data-y="0.455" data-w="0.190" data-h="0.155" data-px="0.700" data-py="0.535" data-pw="0.245" data-ph="0.070" aria-label="الساق"></button>
+      <button class="hotspot mapped-hotspot" data-part="leaves" data-x="0.335" data-y="0.205" data-w="0.185" data-h="0.155" data-px="0.285" data-py="0.455" data-pw="0.245" data-ph="0.070" aria-label="الأوراق"></button>
+      <button class="hotspot mapped-hotspot" data-part="flower" data-x="0.755" data-y="0.025" data-w="0.185" data-h="0.145" data-px="0.365" data-py="0.345" data-pw="0.260" data-ph="0.070" aria-label="الزهرة"></button>
+      <button class="hotspot mapped-hotspot" data-part="fruit" data-x="0.805" data-y="0.235" data-w="0.180" data-h="0.165" data-px="0.745" data-py="0.405" data-pw="0.240" data-ph="0.070" aria-label="الثمرة"></button>
       <button id="likeBtn" class="like-btn" aria-label="إعجاب"><span>❤</span><b id="likeCount">0</b></button>
     </section>
 
@@ -57,79 +57,35 @@
     </section>
 
     <section id="challengeScreen" class="screen image-screen mapped-screen">
-      <img id="challengeImage" src="challenge-page.png" alt="جاهزون للتحدي" class="screen-image mapped-image" />
-      <button id="beginQuizBtn" class="hotspot mapped-hotspot" data-x="0.225" data-y="0.670" data-w="0.540" data-h="0.210" aria-label="ابدأ التحدي"></button>
+      <img id="challengeImage" src="challenge-page.png" data-desktop-src="challenge-page.png" data-mobile-src="challenge-mobile.png?v=20260918p" alt="جاهزون للتحدي" class="screen-image mapped-image" />
+      <button id="beginQuizBtn" class="hotspot mapped-hotspot" data-x="0.225" data-y="0.670" data-w="0.540" data-h="0.210" data-px="0.205" data-py="0.815" data-pw="0.590" data-ph="0.085" aria-label="ابدأ التحدي"></button>
     </section>
 
     <section id="quizScreen" class="screen image-screen mapped-screen">
-      <img id="quizImage" src="quiz-background-final.png?v=20260917n" alt="اختبر معلوماتك" class="screen-image mapped-image" />
-      <div id="quizProgress" class="quiz-progress mapped-ui" data-x="0.715" data-y="0.145" data-w="0.105" data-h="0.060">1 / 10</div>
-      <div id="timerClock" class="quiz-timer mapped-ui" data-x="0.875" data-y="0.115" data-w="0.070" data-h="0.110"><span id="timerNum">10</span></div>
-      <div id="questionBox" class="question-box mapped-ui" data-x="0.265" data-y="0.265" data-w="0.540" data-h="0.120"><div id="questionText"></div></div>
-      <div id="answers" class="answers-grid mapped-ui" data-x="0.365" data-y="0.410" data-w="0.330" data-h="0.430"></div>
-      <div id="feedback" class="feedback mapped-ui" data-x="0.395" data-y="0.850" data-w="0.300" data-h="0.055"></div>
+      <img id="quizImage" src="quiz-background-final.png?v=20260918p" data-desktop-src="quiz-background-final.png?v=20260918p" data-mobile-src="quiz-mobile.png?v=20260918p" alt="اختبر معلوماتك" class="screen-image mapped-image" />
+      <div id="quizProgress" class="quiz-progress mapped-ui" data-x="0.715" data-y="0.145" data-w="0.105" data-h="0.060" data-px="0.035" data-py="0.205" data-pw="0.145" data-ph="0.080">1 / 10</div>
+      <div id="timerClock" class="quiz-timer mapped-ui" data-x="0.875" data-y="0.115" data-w="0.070" data-h="0.110" data-px="0.800" data-py="0.190" data-pw="0.155" data-ph="0.120"><span id="timerNum">10</span></div>
+      <div id="questionBox" class="question-box mapped-ui" data-x="0.265" data-y="0.265" data-w="0.540" data-h="0.120" data-px="0.300" data-py="0.325" data-pw="0.650" data-ph="0.100"><div id="questionText"></div></div>
+      <div id="answers" class="answers-grid mapped-ui" data-x="0.365" data-y="0.410" data-w="0.330" data-h="0.430" data-px="0.345" data-py="0.430" data-pw="0.565" data-ph="0.295"></div>
+      <div id="feedback" class="feedback mapped-ui" data-x="0.395" data-y="0.850" data-w="0.300" data-h="0.055" data-px="0.300" data-py="0.730" data-pw="0.600" data-ph="0.045"></div>
     </section>
 
     <section id="resultScreen" class="screen image-screen mapped-screen result-fit-screen">
-      <img id="resultImage" src="result-page-final.png?v=20260917n" alt="أحسنت يا بطل" class="screen-image mapped-image result-fit-image" />
+      <img id="resultImage" src="result-page-final.png?v=20260918p" data-desktop-src="result-page-final.png?v=20260918p" data-mobile-src="result-mobile.png?v=20260918p" alt="أحسنت يا بطل" class="screen-image mapped-image result-fit-image" />
       <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
-      <div id="scoreText" class="score-number mapped-ui" data-x="0.402" data-y="0.349" data-w="0.185" data-h="0.123"></div>
-      <a id="whatsappContactBtn" class="whatsapp-hotspot mapped-ui" data-x="0.495" data-y="0.588" data-w="0.151" data-h="0.082" href="https://wa.me/970598494977" target="_blank" rel="noopener" aria-label="تواصل معنا عبر واتساب"></a>
+      <div id="scoreText" class="score-number mapped-ui" data-x="0.402" data-y="0.349" data-w="0.185" data-h="0.123" data-px="0.375" data-py="0.410" data-pw="0.410" data-ph="0.090"></div>
+      <a id="whatsappContactBtn" class="whatsapp-hotspot mapped-ui" data-x="0.495" data-y="0.588" data-w="0.151" data-h="0.082" data-px="0.605" data-py="0.555" data-pw="0.250" data-ph="0.055" href="https://wa.me/970598494977" target="_blank" rel="noopener" aria-label="تواصل معنا عبر واتساب"></a>
       <div id="ratingStars" class="hidden-rating" aria-hidden="true"><button data-rate="1"></button><button data-rate="2"></button><button data-rate="3"></button><button data-rate="4"></button><button data-rate="5"></button></div>
-      <textarea id="ideaInput" class="idea-input mapped-ui" data-x="0.289" data-y="0.748" data-w="0.229" data-h="0.063" rows="2" placeholder="اكتب فكرتك هنا"></textarea>
-      <button id="sendIdeaBtn" class="transparent-action mapped-ui" data-x="0.520" data-y="0.748" data-w="0.121" data-h="0.063" aria-label="إرسال الفكرة"></button>
-      <a class="transparent-action mapped-ui" data-x="0.672" data-y="0.596" data-w="0.046" data-h="0.105" href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener" aria-label="Instagram"></a>
-      <a class="transparent-action mapped-ui" data-x="0.728" data-y="0.596" data-w="0.046" data-h="0.105" href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener" aria-label="TikTok"></a>
-      <a class="transparent-action mapped-ui" data-x="0.785" data-y="0.596" data-w="0.046" data-h="0.105" href="https://www.snapchat.com/add/ghada.invitations" target="_blank" rel="noopener" aria-label="Snapchat"></a>
-      <button id="restartQuizBtn" class="transparent-action mapped-ui" data-x="0.371" data-y="0.847" data-w="0.166" data-h="0.089" aria-label="إعادة التحدي"></button>
-      <button id="returnPartsBtn" class="transparent-action mapped-ui" data-x="0.552" data-y="0.847" data-w="0.174" data-h="0.089" aria-label="الرجوع للأجزاء"></button>
+      <textarea id="ideaInput" class="idea-input mapped-ui" data-x="0.289" data-y="0.748" data-w="0.229" data-h="0.063" data-px="0.200" data-py="0.705" data-pw="0.415" data-ph="0.045" rows="2" placeholder="اكتب فكرتك هنا"></textarea>
+      <button id="sendIdeaBtn" class="transparent-action mapped-ui" data-x="0.520" data-y="0.748" data-w="0.121" data-h="0.063" data-px="0.630" data-py="0.705" data-pw="0.195" data-ph="0.045" aria-label="إرسال الفكرة"></button>
+      <a class="transparent-action mapped-ui" data-x="0.672" data-y="0.596" data-w="0.046" data-h="0.105" data-px="0.505" data-py="0.785" data-pw="0.060" data-ph="0.055" href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener" aria-label="Instagram"></a>
+      <a class="transparent-action mapped-ui" data-x="0.728" data-y="0.596" data-w="0.046" data-h="0.105" data-px="0.665" data-py="0.785" data-pw="0.060" data-ph="0.055" href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener" aria-label="TikTok"></a>
+      <a class="transparent-action mapped-ui" data-x="0.785" data-y="0.596" data-w="0.046" data-h="0.105" data-px="0.000" data-py="0.000" data-pw="0.000" data-ph="0.000" href="https://www.snapchat.com/add/ghada.invitations" target="_blank" rel="noopener" aria-label="Snapchat"></a>
+      <button id="restartQuizBtn" class="transparent-action mapped-ui" data-x="0.371" data-y="0.847" data-w="0.166" data-h="0.089" data-px="0.155" data-py="0.860" data-pw="0.305" data-ph="0.070" aria-label="إعادة التحدي"></button>
+      <button id="returnPartsBtn" class="transparent-action mapped-ui" data-x="0.552" data-y="0.847" data-w="0.174" data-h="0.089" data-px="0.495" data-py="0.860" data-pw="0.335" data-ph="0.070" aria-label="الرجوع للأجزاء"></button>
       <div id="statusToast" class="status-toast"></div>
     </section>
   </main>
-  <script src="script.js?v=20260917n"></script>
-  <script>
-    function isPortraitMobile(){
-      return window.matchMedia('(orientation: portrait) and (max-width: 700px)').matches;
-    }
-    function layoutMappedElements(screenId,imageId){
-      const screen=document.getElementById(screenId);
-      const image=document.getElementById(imageId);
-      if(!screen||!image||!image.naturalWidth||!screen.classList.contains('active'))return;
-      const cw=screen.clientWidth,ch=screen.clientHeight,nw=image.naturalWidth,nh=image.naturalHeight;
-      const portrait=isPortraitMobile();
-      const scale=portrait?Math.min(cw/nw,ch/nh):Math.max(cw/nw,ch/nh);
-      const renderedW=nw*scale,renderedH=nh*scale;
-      const offsetX=(cw-renderedW)/2,offsetY=(ch-renderedH)/2;
-      screen.querySelectorAll('.mapped-hotspot,.mapped-ui').forEach(el=>{
-        const x=Number(el.dataset.x||0),y=Number(el.dataset.y||0),w=Number(el.dataset.w||0),h=Number(el.dataset.h||0);
-        el.style.left=`${offsetX+x*renderedW}px`;
-        el.style.top=`${offsetY+y*renderedH}px`;
-        el.style.width=`${w*renderedW}px`;
-        el.style.height=`${h*renderedH}px`;
-      });
-    }
-    function layoutAllMappedElements(){
-      layoutMappedElements('coverScreen','coverImage');
-      layoutMappedElements('partsScreen','partsImage');
-      layoutMappedElements('challengeScreen','challengeImage');
-      layoutMappedElements('quizScreen','quizImage');
-      layoutMappedElements('resultScreen','resultImage');
-    }
-    const detailScreenEl=document.getElementById('detailScreen');
-    const detailImageEl=document.getElementById('detailImage');
-    function syncDetailPortraitBackground(){
-      const src=detailImageEl.getAttribute('src')||'roots.png';
-      detailScreenEl.style.backgroundImage=`url('${src}')`;
-      detailScreenEl.style.backgroundSize='cover';
-      detailScreenEl.style.backgroundPosition='center';
-      detailScreenEl.style.backgroundRepeat='no-repeat';
-    }
-    syncDetailPortraitBackground();
-    new MutationObserver(syncDetailPortraitBackground).observe(detailImageEl,{attributes:true,attributeFilter:['src']});
-    [document.getElementById('coverImage'),document.getElementById('partsImage'),document.getElementById('challengeImage'),document.getElementById('quizImage'),document.getElementById('resultImage')].forEach(img=>img?.addEventListener('load',layoutAllMappedElements));
-    window.addEventListener('resize',layoutAllMappedElements);
-    window.addEventListener('orientationchange',()=>setTimeout(layoutAllMappedElements,180));
-    requestAnimationFrame(()=>requestAnimationFrame(layoutAllMappedElements));
-  </script>
+  <script src="script.js?v=20260918p"></script>
 </body>
 </html>
