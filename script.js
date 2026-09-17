@@ -38,6 +38,7 @@ function layoutAllMappedElements(){
 const showScreen=id=>{
   screens.forEach(s=>s.classList.toggle('active',s.id===id));
   requestAnimationFrame(()=>requestAnimationFrame(layoutAllMappedElements));
+  setTimeout(layoutAllMappedElements,120);
 };
 
 const coverStartBtn=document.getElementById('coverStartBtn');
@@ -73,7 +74,7 @@ const likeCount=document.getElementById('likeCount');
 
 [partsImage,challengeImage,quizImage,resultImage].forEach(img=>img?.addEventListener('load',layoutAllMappedElements));
 window.addEventListener('resize',layoutAllMappedElements);
-window.addEventListener('orientationchange',()=>setTimeout(layoutAllMappedElements,150));
+window.addEventListener('orientationchange',()=>setTimeout(layoutAllMappedElements,180));
 
 const parts=[
   {key:'roots',title:'الجذور',image:'roots.png'},
@@ -85,12 +86,12 @@ const parts=[
 let currentPartIndex=0;
 
 const A={
-  roots:{label:'الجذور',image:'quiz-roots.png'},
-  stem:{label:'الساق',image:'quiz-stem.png'},
-  leaves:{label:'الأوراق',image:'quiz-leaves.png'},
-  flower:{label:'الزهرة',image:'quiz-flower.png'},
-  fruit:{label:'الثمرة',image:'quiz-fruit.png'},
-  seed:{label:'البذرة',image:'quiz-seed.png'}
+  roots:{label:'الجذور',image:'quiz-roots-icon.png'},
+  stem:{label:'الساق',image:'quiz-stem-icon.png'},
+  leaves:{label:'الأوراق',image:'quiz-leaf-icon.png'},
+  flower:{label:'الزهرة',image:'quiz-flower-icon.png'},
+  fruit:{label:'الثمرة',image:'quiz-fruit-icon.png'},
+  seed:{label:'البذرة',image:'quiz-seed-icon.png'}
 };
 const opt=(key,correct=false)=>({...A[key],correct});
 
@@ -158,10 +159,7 @@ function startGrowthMusic(){
 }
 function stopGrowthMusic(){
   if(growthBeatTimer){clearInterval(growthBeatTimer);growthBeatTimer=null;}
-  if(growthAudioCtx){
-    try{growthAudioCtx.close();}catch(e){}
-    growthAudioCtx=null;
-  }
+  if(growthAudioCtx){try{growthAudioCtx.close();}catch(e){}growthAudioCtx=null;}
 }
 
 coverStartBtn.onclick=()=>showScreen('videoScreen');
@@ -172,13 +170,8 @@ goGrowthBtn.onclick=()=>showScreen('growthScreen');
 playGrowthBtn.onclick=async()=>{
   playGrowthBtn.classList.add('hidden');
   growthVideo.currentTime=0;
-  try{
-    startGrowthMusic();
-    await growthVideo.play();
-  }catch{
-    stopGrowthMusic();
-    playGrowthBtn.classList.remove('hidden');
-  }
+  try{startGrowthMusic();await growthVideo.play();}
+  catch{stopGrowthMusic();playGrowthBtn.classList.remove('hidden')}
 };
 growthVideo.onended=()=>{stopGrowthMusic();showPartsBtn.classList.remove('hidden')};
 growthVideo.onerror=()=>{stopGrowthMusic();showPartsBtn.classList.remove('hidden')};
@@ -214,6 +207,7 @@ function startQuiz(){
   qIndex=0;
   score=0;
   timedOutCount=0;
+  questionLocked=false;
   clearCelebration();
   showScreen('quizScreen');
   renderQuestion();
@@ -221,6 +215,7 @@ function startQuiz(){
 
 function renderQuestion(){
   clearInterval(timer);
+  if(qIndex>=quizOrder.length){finishQuiz();return;}
   questionLocked=false;
   timeLeft=10;
   timerNum.textContent=timeLeft;
@@ -231,7 +226,7 @@ function renderQuestion(){
   answersEl.innerHTML='';
   const options=shuffle(q.options);
 
-  options.forEach(opt=>{
+  options.forEach(option=>{
     const btn=document.createElement('button');
     btn.type='button';
     btn.className='answer-btn';
@@ -239,21 +234,21 @@ function renderQuestion(){
     shell.className='icon-shell';
     const img=document.createElement('img');
     img.className='option-img';
-    img.src=opt.image;
-    img.alt=opt.label;
+    img.src=option.image;
+    img.alt=option.label;
     shell.appendChild(img);
     const label=document.createElement('span');
     label.className='label';
-    label.textContent=opt.label;
+    label.textContent=option.label;
     btn.append(shell,label);
-    btn.onclick=()=>chooseAnswer(opt,q.options.find(o=>o.correct));
+    btn.onclick=()=>chooseAnswer(option,q.options.find(o=>o.correct));
     answersEl.appendChild(btn);
   });
 
   layoutAllMappedElements();
   timer=setInterval(()=>{
     timeLeft--;
-    timerNum.textContent=timeLeft;
+    timerNum.textContent=Math.max(0,timeLeft);
     if(timeLeft<=0){
       clearInterval(timer);
       timedOutCount++;
@@ -292,15 +287,19 @@ function revealAnswer(selected,correct,isTimeout=false){
     qIndex++;
     if(qIndex>=quizOrder.length)finishQuiz();
     else renderQuestion();
-  },1500);
+  },1100);
 }
 
 function finishQuiz(){
   clearInterval(timer);
+  questionLocked=true;
+  feedbackEl.textContent='';
   scoreText.textContent=String(score);
   ratingStars.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
   ideaInput.value='';
   showScreen('resultScreen');
+  if(!resultImage.complete){resultImage.addEventListener('load',layoutAllMappedElements,{once:true});}
+  else layoutAllMappedElements();
   if(score>8)setTimeout(startCelebration,250);
 }
 restartQuizBtn.onclick=startQuiz;
