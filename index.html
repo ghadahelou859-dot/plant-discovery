@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#84a943" />
   <title>اكتشف أجزاء النبتة</title>
-  <link rel="stylesheet" href="style.css?v=20260917a" />
+  <link rel="stylesheet" href="style.css?v=20260917b" />
 </head>
 <body>
   <main id="app">
@@ -30,13 +30,13 @@
       <button id="showPartsBtn" class="main-btn hidden">ابدأ الاكتشاف</button>
     </section>
 
-    <section id="partsScreen" class="screen image-screen">
-      <img src="parts.png" alt="أجزاء النبتة" class="screen-image" />
-      <button class="hotspot hs-roots" data-part="roots" aria-label="الجذور"></button>
-      <button class="hotspot hs-stem" data-part="stem" aria-label="الساق"></button>
-      <button class="hotspot hs-leaves" data-part="leaves" aria-label="الأوراق"></button>
-      <button class="hotspot hs-flower" data-part="flower" aria-label="الزهرة"></button>
-      <button class="hotspot hs-fruit" data-part="fruit" aria-label="الثمرة"></button>
+    <section id="partsScreen" class="screen image-screen mapped-screen">
+      <img id="partsImage" src="parts.png" alt="أجزاء النبتة" class="screen-image mapped-image" />
+      <button class="hotspot mapped-hotspot" data-part="roots" data-x="0.397" data-y="0.748" data-w="0.190" data-h="0.145" aria-label="الجذور"></button>
+      <button class="hotspot mapped-hotspot" data-part="stem" data-x="0.745" data-y="0.455" data-w="0.190" data-h="0.155" aria-label="الساق"></button>
+      <button class="hotspot mapped-hotspot" data-part="leaves" data-x="0.335" data-y="0.205" data-w="0.185" data-h="0.155" aria-label="الأوراق"></button>
+      <button class="hotspot mapped-hotspot" data-part="flower" data-x="0.755" data-y="0.025" data-w="0.185" data-h="0.145" aria-label="الزهرة"></button>
+      <button class="hotspot mapped-hotspot" data-part="fruit" data-x="0.805" data-y="0.235" data-w="0.180" data-h="0.165" aria-label="الثمرة"></button>
       <button id="likeBtn" class="like-btn" aria-label="إعجاب"><span>❤</span><b id="likeCount">0</b></button>
     </section>
 
@@ -48,9 +48,9 @@
       </div>
     </section>
 
-    <section id="challengeScreen" class="screen image-screen">
-      <img src="challenge-page.png" alt="جاهزون للتحدي" class="screen-image" />
-      <button id="beginQuizBtn" class="hotspot hs-challenge" aria-label="ابدأ التحدي"></button>
+    <section id="challengeScreen" class="screen image-screen mapped-screen">
+      <img id="challengeImage" src="challenge-page.png" alt="جاهزون للتحدي" class="screen-image mapped-image" />
+      <button id="beginQuizBtn" class="hotspot mapped-hotspot" data-x="0.385" data-y="0.545" data-w="0.410" data-h="0.235" aria-label="ابدأ التحدي"></button>
     </section>
 
     <section id="quizScreen" class="screen image-screen">
@@ -93,6 +93,6 @@
       </div>
     </section>
   </main>
-  <script src="script.js?v=20260917a"></script>
+  <script src="script.js?v=20260917b"></script>
 </body>
 </html>
