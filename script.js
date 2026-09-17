@@ -1,5 +1,16 @@
 const screens=[...document.querySelectorAll('.screen')];
 
+function isPortraitMobile(){
+  return window.matchMedia('(orientation: portrait) and (max-width: 700px)').matches;
+}
+
+function mappedValue(el,key){
+  const portrait=isPortraitMobile();
+  const mobileKey='p'+key;
+  const raw=portrait && el.dataset[mobileKey]!==undefined ? el.dataset[mobileKey] : el.dataset[key];
+  return Number(raw||0);
+}
+
 function layoutMappedElements(screenId,imageId){
   const screen=document.getElementById(screenId);
   const image=document.getElementById(imageId);
@@ -9,18 +20,17 @@ function layoutMappedElements(screenId,imageId){
   const ch=screen.clientHeight;
   const nw=image.naturalWidth;
   const nh=image.naturalHeight;
-  const contain=screen.classList.contains('contain-screen');
-  const scale=contain?Math.min(cw/nw,ch/nh):Math.max(cw/nw,ch/nh);
+  const scale=Math.max(cw/nw,ch/nh);
   const renderedW=nw*scale;
   const renderedH=nh*scale;
   const offsetX=(cw-renderedW)/2;
   const offsetY=(ch-renderedH)/2;
 
   screen.querySelectorAll('.mapped-hotspot,.mapped-ui').forEach(el=>{
-    const x=Number(el.dataset.x||0);
-    const y=Number(el.dataset.y||0);
-    const w=Number(el.dataset.w||0);
-    const h=Number(el.dataset.h||0);
+    const x=mappedValue(el,'x');
+    const y=mappedValue(el,'y');
+    const w=mappedValue(el,'w');
+    const h=mappedValue(el,'h');
     el.style.left=`${offsetX+x*renderedW}px`;
     el.style.top=`${offsetY+y*renderedH}px`;
     el.style.width=`${w*renderedW}px`;
@@ -29,6 +39,7 @@ function layoutMappedElements(screenId,imageId){
 }
 
 function layoutAllMappedElements(){
+  layoutMappedElements('coverScreen','coverImage');
   layoutMappedElements('partsScreen','partsImage');
   layoutMappedElements('challengeScreen','challengeImage');
   layoutMappedElements('quizScreen','quizImage');
@@ -41,6 +52,7 @@ const showScreen=id=>{
   setTimeout(layoutAllMappedElements,120);
 };
 
+const coverImage=document.getElementById('coverImage');
 const coverStartBtn=document.getElementById('coverStartBtn');
 const introVideo=document.getElementById('introVideo');
 const playIntroBtn=document.getElementById('playIntroBtn');
@@ -72,16 +84,32 @@ const celebrationLayer=document.getElementById('celebrationLayer');
 const likeBtn=document.getElementById('likeBtn');
 const likeCount=document.getElementById('likeCount');
 
-[partsImage,challengeImage,quizImage,resultImage].forEach(img=>img?.addEventListener('load',layoutAllMappedElements));
-window.addEventListener('resize',layoutAllMappedElements);
-window.addEventListener('orientationchange',()=>setTimeout(layoutAllMappedElements,180));
+const responsiveImages=[coverImage,partsImage,challengeImage,quizImage,resultImage];
+
+function syncResponsiveAssets(){
+  const portrait=isPortraitMobile();
+  responsiveImages.forEach(img=>{
+    if(!img)return;
+    const target=portrait?img.dataset.mobileSrc:img.dataset.desktopSrc;
+    if(target && img.getAttribute('src')!==target)img.setAttribute('src',target);
+  });
+  if(typeof currentPartIndex==='number' && parts?.[currentPartIndex]){
+    const target=portrait?parts[currentPartIndex].mobileImage:parts[currentPartIndex].image;
+    if(detailImage.getAttribute('src')!==target)detailImage.setAttribute('src',target);
+  }
+  requestAnimationFrame(()=>requestAnimationFrame(layoutAllMappedElements));
+}
+
+responsiveImages.forEach(img=>img?.addEventListener('load',layoutAllMappedElements));
+window.addEventListener('resize',()=>{syncResponsiveAssets();layoutAllMappedElements();});
+window.addEventListener('orientationchange',()=>setTimeout(()=>{syncResponsiveAssets();layoutAllMappedElements();},180));
 
 const parts=[
-  {key:'roots',title:'الجذور',image:'roots.png'},
-  {key:'stem',title:'الساق',image:'stem.png'},
-  {key:'leaves',title:'الأوراق',image:'leaves.png'},
-  {key:'flower',title:'الزهرة',image:'flower.png'},
-  {key:'fruit',title:'الثمرة',image:'fruit.png'}
+  {key:'roots',title:'الجذور',image:'roots.png',mobileImage:'roots-mobile.png?v=20260918p'},
+  {key:'stem',title:'الساق',image:'stem.png',mobileImage:'stem-mobile.png?v=20260918p'},
+  {key:'leaves',title:'الأوراق',image:'leaves.png',mobileImage:'leaves-mobile.png?v=20260918p'},
+  {key:'flower',title:'الزهرة',image:'flower.png',mobileImage:'flower-mobile.png?v=20260918p'},
+  {key:'fruit',title:'الثمرة',image:'fruit.png',mobileImage:'fruit-mobile.png?v=20260918p'}
 ];
 let currentPartIndex=0;
 
@@ -182,7 +210,7 @@ document.querySelectorAll('[data-part]').forEach(btn=>btn.onclick=()=>openPart(b
 function openPart(key){
   currentPartIndex=parts.findIndex(p=>p.key===key);
   if(currentPartIndex<0)return;
-  detailImage.src=parts[currentPartIndex].image;
+  detailImage.src=isPortraitMobile()?parts[currentPartIndex].mobileImage:parts[currentPartIndex].image;
   detailImage.alt=parts[currentPartIndex].title;
   detailNextBtn.textContent=currentPartIndex===parts.length-1?'ابدأ التحدي':'الجزء التالي';
   showScreen('detailScreen');
@@ -191,7 +219,7 @@ detailBackBtn.onclick=()=>showScreen('partsScreen');
 detailNextBtn.onclick=()=>{
   if(currentPartIndex<parts.length-1){
     currentPartIndex++;
-    detailImage.src=parts[currentPartIndex].image;
+    detailImage.src=isPortraitMobile()?parts[currentPartIndex].mobileImage:parts[currentPartIndex].image;
     detailImage.alt=parts[currentPartIndex].title;
     detailNextBtn.textContent=currentPartIndex===parts.length-1?'ابدأ التحدي':'الجزء التالي';
   }else{
@@ -400,6 +428,7 @@ function playClap(){
   }catch(e){}
 }
 
+syncResponsiveAssets();
 recordView();
 refreshLike();
 layoutAllMappedElements();
