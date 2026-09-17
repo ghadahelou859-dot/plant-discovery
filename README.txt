@@ -1,6 +1,6 @@
-ملفات واجهة التحدي النهائية:
+استبدلي الملفات التالية في مستودع plant-discovery على GitHub:
 
-quiz-background-final.png = خلفية صفحة الأسئلة الفارغة
-result-page-final.png = صفحة النهاية / النتيجة والتقييم
-correct-badge.png = علامة الإجابة الصحيحة
-wrong-badge.png = علامة الإجابة الخاطئة
+quiz-background-final.png = صفحة الأسئلة الجديدة الفارغة
+result-page-final.png = صفحة النتيجة الجديدة
+
+ارفعيهم بنفس الأسماء واضغطي Replace / Commit changes.
