@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#84a943" />
   <title>اكتشف أجزاء النبتة</title>
-  <link rel="stylesheet" href="style.css?v=20260917b" />
+  <link rel="stylesheet" href="style.css?v=20260917c" />
 </head>
 <body>
   <main id="app">
@@ -53,17 +53,13 @@
       <button id="beginQuizBtn" class="hotspot mapped-hotspot" data-x="0.385" data-y="0.545" data-w="0.410" data-h="0.235" aria-label="ابدأ التحدي"></button>
     </section>
 
-    <section id="quizScreen" class="screen image-screen">
-      <img src="quiz-background-final.png" alt="اختبر معلوماتك" class="screen-image" />
-      <div class="quiz-overlay">
-        <div class="quiz-top">
-          <div id="quizProgress" class="chip">السؤال 1 من 10</div>
-          <div class="chip timer-chip"><span id="timerNum">10</span></div>
-        </div>
-        <div class="question-box"><div id="questionText"></div></div>
-        <div id="answers" class="answers-grid"></div>
-        <div id="feedback" class="feedback"></div>
-      </div>
+    <section id="quizScreen" class="screen image-screen mapped-screen">
+      <img id="quizImage" src="quiz-background-final.png" alt="اختبر معلوماتك" class="screen-image mapped-image" />
+      <div id="quizProgress" class="quiz-progress mapped-ui" data-x="0.690" data-y="0.105" data-w="0.145" data-h="0.075">1 / 10</div>
+      <div id="timerClock" class="quiz-timer mapped-ui" data-x="0.825" data-y="0.280" data-w="0.105" data-h="0.165"><span id="timerNum">10</span></div>
+      <div id="questionBox" class="question-box mapped-ui" data-x="0.335" data-y="0.205" data-w="0.455" data-h="0.125"><div id="questionText"></div></div>
+      <div id="answers" class="answers-grid mapped-ui" data-x="0.345" data-y="0.355" data-w="0.440" data-h="0.455"></div>
+      <div id="feedback" class="feedback mapped-ui" data-x="0.410" data-y="0.815" data-w="0.310" data-h="0.065"></div>
     </section>
 
     <section id="resultScreen" class="screen image-screen">
@@ -93,6 +89,6 @@
       </div>
     </section>
   </main>
-  <script src="script.js?v=20260917b"></script>
+  <script src="script.js?v=20260917c"></script>
 </body>
 </html>
