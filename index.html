@@ -1,92 +1,96 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#174f3e" />
-  <title>هيا نكتشف أجزاء النبتة</title>
+  <meta name="theme-color" content="#84a943" />
+  <title>اكتشف أجزاء النبتة</title>
   <link rel="stylesheet" href="style.css?v=20260917a" />
 </head>
 <body>
-  <button id="likeBtn" class="like-button" type="button" aria-label="أعجبني">
-    <span class="like-heart">♥</span><span id="likeCount">0</span>
-  </button>
+  <main id="app">
+    <section id="coverScreen" class="screen active image-screen">
+      <img src="cover.jpg" alt="ابدأ الاكتشاف" class="screen-image" />
+      <button id="coverStartBtn" class="hotspot hs-cover" aria-label="ابدأ الاكتشاف"></button>
+    </section>
 
-  <main id="app" class="app">
-    <section id="coverScreen" class="screen active" aria-label="بداية التجربة">
-      <div class="stage cover-stage">
-        <img class="stage-media" src="cover.jpg" alt="مقدمة درس أجزاء النبتة" />
-        <button id="potStartBtn" class="cover-discover-hotspot" type="button" aria-label="ابدأ الاكتشاف"><span class="sr-only">ابدأ الاكتشاف</span></button>
+    <section id="videoScreen" class="screen center-screen">
+      <video id="introVideo" class="fullscreen-video" playsinline preload="metadata" controlslist="nodownload noplaybackrate" disablepictureinpicture>
+        <source src="intro.mp4" type="video/mp4" />
+      </video>
+      <button id="playIntroBtn" class="main-btn">تشغيل الفيديو</button>
+      <button id="goGrowthBtn" class="main-btn hidden">التالي</button>
+    </section>
+
+    <section id="growthScreen" class="screen center-screen">
+      <video id="growthVideo" class="fullscreen-video" playsinline preload="metadata" controlslist="nodownload noplaybackrate" disablepictureinpicture>
+        <source src="growth.mp4" type="video/mp4" />
+      </video>
+      <button id="playGrowthBtn" class="main-btn">شغّل رحلة النمو</button>
+      <button id="showPartsBtn" class="main-btn hidden">ابدأ الاكتشاف</button>
+    </section>
+
+    <section id="partsScreen" class="screen image-screen">
+      <img src="parts.png" alt="أجزاء النبتة" class="screen-image" />
+      <button class="hotspot hs-roots" data-part="roots" aria-label="الجذور"></button>
+      <button class="hotspot hs-stem" data-part="stem" aria-label="الساق"></button>
+      <button class="hotspot hs-leaves" data-part="leaves" aria-label="الأوراق"></button>
+      <button class="hotspot hs-flower" data-part="flower" aria-label="الزهرة"></button>
+      <button class="hotspot hs-fruit" data-part="fruit" aria-label="الثمرة"></button>
+      <button id="likeBtn" class="like-btn" aria-label="إعجاب"><span>❤</span><b id="likeCount">0</b></button>
+    </section>
+
+    <section id="detailScreen" class="screen image-screen detail-screen">
+      <img id="detailImage" src="roots.png" alt="شرح الجزء" class="screen-image" />
+      <div class="detail-nav">
+        <button id="detailBackBtn" class="secondary-btn">الرجوع للأجزاء</button>
+        <button id="detailNextBtn" class="secondary-btn">التالي</button>
       </div>
     </section>
 
-    <section id="videoScreen" class="screen" aria-label="الفيديو التعريفي">
-      <div class="video-stage">
-        <video id="introVideo" class="full-video" playsinline preload="auto" controlslist="nodownload noplaybackrate" disablepictureinpicture><source src="intro.mp4" type="video/mp4" /></video>
-        <button id="manualPlayBtn" class="manual-play hidden" type="button">اضغط لتشغيل الفيديو</button>
-      </div>
+    <section id="challengeScreen" class="screen image-screen">
+      <img src="challenge-page.png" alt="جاهزون للتحدي" class="screen-image" />
+      <button id="beginQuizBtn" class="hotspot hs-challenge" aria-label="ابدأ التحدي"></button>
     </section>
 
-    <section id="growthScreen" class="screen" aria-label="مراحل نمو النبتة">
-      <div class="video-stage growth-stage">
-        <video id="growthVideo" class="full-video" playsinline preload="auto" controlslist="nodownload noplaybackrate" disablepictureinpicture><source src="growth.mp4" type="video/mp4" /></video>
-        <button id="growthPlayBtn" class="manual-play hidden" type="button">اضغط لتشغيل فيديو النمو</button>
-        <button id="discoverBtn" class="discover-btn hidden" type="button">ابدأ الاكتشاف 🌱</button>
-      </div>
-    </section>
-
-    <section id="partsScreen" class="screen parts-screen" aria-label="أجزاء النبتة">
-      <div class="parts-layout"><div class="parts-canvas">
-        <img class="parts-image" src="parts.png" alt="أجزاء النبتة" />
-        <button class="hotspot part-hotspot flower" data-part="flower" type="button" aria-label="الزهرة"></button>
-        <button class="hotspot part-hotspot fruit" data-part="fruit" type="button" aria-label="الثمرة"></button>
-        <button class="hotspot part-hotspot leaves" data-part="leaves" type="button" aria-label="الأوراق"></button>
-        <button class="hotspot part-hotspot stem" data-part="stem" type="button" aria-label="الساق"></button>
-        <button class="hotspot part-hotspot roots" data-part="roots" type="button" aria-label="الجذور"></button>
-      </div></div>
-    </section>
-
-    <section id="detailScreen" class="screen" aria-label="شرح الجزء">
-      <div class="stage detail-stage">
-        <img id="detailImage" class="detail-image" src="seed.png" alt="شرح الجزء المختار" />
-        <div class="detail-overlay"><button id="backBtn" class="back-btn" type="button">رجوع للأجزاء</button><button id="nextBtn" class="next-btn" type="button">الجزء التالي ←</button></div>
-      </div>
-    </section>
-
-    <section id="challengeScreen" class="screen challenge-screen" aria-label="جاهزين للتحدي">
-      <div class="art-stage challenge-art-stage">
-        <img src="challenge-page.png" alt="جاهزين للتحدي" class="art-image" />
-        <button id="beginChallengeBtn" class="art-hotspot challenge-start-hotspot" type="button" aria-label="ابدأ التحدي"><span class="sr-only">ابدأ التحدي</span></button>
-      </div>
-    </section>
-
-    <section id="quizScreen" class="screen quiz-screen" aria-label="تحدي الأسئلة">
-      <div class="quiz-background"></div>
+    <section id="quizScreen" class="screen image-screen">
+      <img src="quiz-background-final.png" alt="اختبر معلوماتك" class="screen-image" />
       <div class="quiz-overlay">
-        <div class="quiz-topbar"><div id="quizProgress" class="quiz-progress">السؤال 1 من 10</div><div id="timer" class="timer" aria-label="المؤقت"><span id="timerNumber">10</span><small>ثانية</small></div></div>
-        <div class="quiz-card">
-          <h1 id="questionText" class="question-text"></h1>
-          <div id="answers" class="answers"></div>
-          <div id="feedback" class="feedback" aria-live="polite"></div>
-          <button id="nextQuestionBtn" class="next-question hidden" type="button">السؤال التالي ←</button>
+        <div class="quiz-top">
+          <div id="quizProgress" class="chip">السؤال 1 من 10</div>
+          <div class="chip timer-chip"><span id="timerNum">10</span></div>
         </div>
+        <div class="question-box"><div id="questionText"></div></div>
+        <div id="answers" class="answers-grid"></div>
+        <div id="feedback" class="feedback"></div>
       </div>
     </section>
 
-    <section id="resultScreen" class="screen result-screen" aria-label="النتيجة والتقييم">
-      <div class="result-art-wrap">
-        <div class="art-stage result-art-stage">
-          <img src="result-page.png" alt="أحسنت يا بطل" class="art-image" />
-          <div id="scoreText" class="score-overlay"></div>
-          <button id="restartQuizBtn" class="art-hotspot result-restart-hotspot" type="button" aria-label="اكتشف من جديد"><span class="sr-only">اكتشف من جديد</span></button>
-          <button id="returnPartsBtn" class="art-hotspot result-parts-hotspot" type="button" aria-label="العودة للأجزاء"><span class="sr-only">العودة للأجزاء</span></button>
+    <section id="resultScreen" class="screen image-screen">
+      <img src="result-page-final.png" alt="أحسنت يا بطل" class="screen-image" />
+      <div class="result-overlay">
+        <div id="scoreText" class="score-text"></div>
+        <div class="rating-box">
+          <div class="stars" id="ratingStars">
+            <button data-rate="1">★</button><button data-rate="2">★</button><button data-rate="3">★</button><button data-rate="4">★</button><button data-rate="5">★</button>
+          </div>
+          <div id="ratingMsg" class="small-msg"></div>
+        </div>
+        <div class="idea-box">
+          <textarea id="ideaInput" rows="3" placeholder="اكتب فكرتك هنا"></textarea>
+          <button id="sendIdeaBtn" class="secondary-btn">إرسال الفكرة</button>
+          <div id="ideaMsg" class="small-msg"></div>
+        </div>
+        <div class="social-row">
+          <a href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener" class="social-pill ig">IG</a>
+          <a href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener" class="social-pill tt">TT</a>
+          <a href="https://www.snapchat.com/add/ghada.invitations" target="_blank" rel="noopener" class="social-pill sc">SC</a>
+        </div>
+        <div class="result-actions">
+          <button id="restartQuizBtn" class="secondary-btn">أعد التحدي</button>
+          <button id="returnPartsBtn" class="secondary-btn">العودة للأجزاء</button>
         </div>
       </div>
-      <section class="result-interactions" aria-label="التقييم والأفكار">
-        <div class="rating-box"><h2>قيّم التجربة</h2><div class="rating-stars" role="group" aria-label="التقييم من خمس نجوم"><button type="button" data-rating="1">★</button><button type="button" data-rating="2">★</button><button type="button" data-rating="3">★</button><button type="button" data-rating="4">★</button><button type="button" data-rating="5">★</button></div><div id="ratingStatus" class="rating-status" aria-live="polite">اختاروا عدد النجوم وسيتم الحفظ تلقائيًا.</div></div>
-        <div class="idea-box"><h2>شاركنا أفكارك 🌱</h2><textarea id="ideaText" rows="3" maxlength="500" placeholder="اكتب فكرة أو ملاحظة جميلة..."></textarea><button id="submitIdeaBtn" class="submit-idea-btn" type="button">إرسال ✈️</button><div id="ideaStatus" class="idea-status" aria-live="polite"></div></div>
-        <div class="social-icons"><a href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon instagram">◎</a><a href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-icon tiktok">♪</a><a id="snapchatLink" href="https://www.snapchat.com/add/ghada.invitations" target="_blank" rel="noopener noreferrer" aria-label="Snapchat" class="social-icon snapchat">👻</a></div>
-      </section>
     </section>
   </main>
   <script src="script.js?v=20260917a"></script>
