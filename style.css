@@ -4,19 +4,23 @@
   --brown:#4b3925;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;overflow:hidden;font-family:Tahoma,Arial,sans-serif;background:#194f3e;color:var(--brown)}
-#app{height:100dvh;width:100%;position:relative;background:#194f3e}
-.screen{display:none;position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:#194f3e}
+html,body{margin:0;width:100%;height:100%;min-height:100%;overflow:hidden;font-family:Tahoma,Arial,sans-serif;background:#194f3e;color:var(--brown)}
+body{min-height:100dvh}
+#app{height:100dvh;width:100vw;position:relative;background:#194f3e;overflow:hidden}
+.screen{display:none;position:absolute;inset:0;width:100vw;height:100dvh;overflow:hidden;background:#194f3e}
 .screen.active{display:block}
 .hidden{display:none!important}
-.image-screen{background:#194f3e}
-.screen-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
-.contain-image{object-fit:contain!important;background:#194f3e}
+.image-screen{background:#194f3e;isolation:isolate}
+.full-art-screen::before{content:"";position:absolute;inset:-3%;z-index:0;background-image:linear-gradient(rgba(17,58,45,.22),rgba(17,58,45,.22)),var(--page-bg);background-size:cover;background-position:center;filter:blur(22px) saturate(1.08) brightness(.92);transform:scale(1.08);opacity:.98}
+.full-art-screen::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(25,79,62,.08),rgba(25,79,62,.16));pointer-events:none}
+.screen-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:1}
+.contain-image{object-fit:contain!important;background:transparent!important}
 .result-fit-screen{background:#194f3e}
 .result-fit-image{object-fit:contain!important;object-position:center center!important}
+.detail-art-screen{background:radial-gradient(circle at 50% 35%,#dfeecb 0%,#9fbe79 48%,#194f3e 100%)}
 .center-screen{display:none;padding:0;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:#000}
 .center-screen.active{display:flex}
-.fullscreen-video{width:100%;height:100%;object-fit:cover;background:#000}
+.fullscreen-video{width:100vw;height:100dvh;object-fit:cover;background:#000}
 .hotspot{position:absolute;border:0;background:rgba(255,255,255,.01);cursor:pointer;z-index:4;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .hotspot:focus-visible{outline:3px solid rgba(255,255,255,.9);outline-offset:2px}
 .hs-cover{left:25%;top:78%;width:50%;height:10%;border-radius:50px}
@@ -30,7 +34,6 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:Tahoma,Arial,sans-ser
 .like-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:8;width:62px;height:84px;border:none;border-radius:999px;background:#fff0f4;color:#e04f74;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(0,0,0,.15);cursor:pointer}
 .like-btn.liked{background:#e04f74;color:#fff}
 .like-btn span{font-size:24px;line-height:1}.like-btn b{font-size:14px;margin-top:4px}
-
 .quiz-progress{display:flex;align-items:center;justify-content:center;font-weight:900;font-size:clamp(13px,1.4vw,21px);color:#3f2d18;white-space:nowrap;pointer-events:none}
 .quiz-timer{display:flex;align-items:center;justify-content:center;color:#214e25;font-weight:900;font-size:clamp(22px,3vw,44px);text-shadow:0 2px 0 rgba(255,255,255,.75);pointer-events:none}
 .question-box{display:flex;align-items:center;justify-content:center;text-align:center;padding:clamp(6px,1vw,14px);font-size:clamp(17px,1.85vw,31px);font-weight:900;line-height:1.35;color:#173f32;background:transparent;border:0;overflow:hidden;pointer-events:none}
@@ -43,7 +46,6 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:Tahoma,Arial,sans-ser
 .answer-btn.correct{filter:drop-shadow(0 0 12px rgba(87,190,70,.95))}.answer-btn.wrong{filter:drop-shadow(0 0 12px rgba(220,74,74,.9))}.answer-btn.disabled{pointer-events:none}
 .answer-badge{position:absolute;right:-2%;top:-4%;width:34%;height:34%;object-fit:contain;z-index:6;filter:drop-shadow(0 3px 5px rgba(0,0,0,.25))}
 .feedback{display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:900;font-size:clamp(15px,1.7vw,24px);text-shadow:0 2px 4px rgba(0,0,0,.45);pointer-events:none}
-
 .score-number{display:flex;align-items:center;justify-content:center;font-size:clamp(48px,7vw,112px);font-weight:1000;color:#13813c;text-shadow:0 3px 0 rgba(255,255,255,.85);line-height:1;pointer-events:none}
 .hidden-rating{display:none!important}
 .whatsapp-hotspot{z-index:8!important;display:block;background:transparent!important;border:0!important;border-radius:20px;cursor:pointer;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
@@ -57,28 +59,7 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:Tahoma,Arial,sans-ser
 .celebration-layer{position:absolute;inset:0;z-index:10;pointer-events:none;overflow:hidden}
 .confetti-piece{position:absolute;top:-8%;width:10px;height:18px;border-radius:3px;animation:confetti-fall 2.4s linear forwards}
 @keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0);opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
-
-@media (max-width:900px){
-  .answer-btn{width:92%}
-  .answer-btn .label{font-size:clamp(11px,2vw,16px)}
-}
-@media (max-width:700px){
-  .hs-cover{left:18%;width:64%}
-  .like-btn{right:8px;width:52px;height:72px}
-  .detail-nav{width:100%;padding:0 8px;gap:7px}
-  .detail-nav .secondary-btn{font-size:14px;padding:11px 9px}
-  .question-box{font-size:clamp(15px,4vw,22px);padding:4px}
-  .quiz-progress{font-size:clamp(11px,3vw,16px)}
-  .quiz-timer{font-size:clamp(20px,6vw,34px)}
-  .feedback{font-size:clamp(13px,3.6vw,19px)}
-  .answer-btn .label{font-size:clamp(10px,2.8vw,14px)}
-}
-@media (orientation:portrait){
-  .contain-screen{background:#194f3e}
-  .score-number{font-size:clamp(42px,11vw,86px)}
-}
-@media (orientation:landscape) and (max-height:600px){
-  .detail-nav{bottom:8px}
-  .detail-nav .secondary-btn{padding:8px 12px;font-size:13px}
-  .like-btn{width:48px;height:64px}
-}
+@media (max-width:900px){.answer-btn{width:92%}.answer-btn .label{font-size:clamp(11px,2vw,16px)}}
+@media (max-width:700px){.hs-cover{left:18%;width:64%}.like-btn{right:8px;width:52px;height:72px}.detail-nav{width:100%;padding:0 8px;gap:7px}.detail-nav .secondary-btn{font-size:14px;padding:11px 9px}.question-box{font-size:clamp(15px,4vw,22px);padding:4px}.quiz-progress{font-size:clamp(11px,3vw,16px)}.quiz-timer{font-size:clamp(20px,6vw,34px)}.feedback{font-size:clamp(13px,3.6vw,19px)}.answer-btn .label{font-size:clamp(10px,2.8vw,14px)}}
+@media (orientation:portrait){.contain-screen{background:#194f3e}.score-number{font-size:clamp(42px,11vw,86px)}}
+@media (orientation:landscape) and (max-height:600px){.detail-nav{bottom:8px}.detail-nav .secondary-btn{padding:8px 12px;font-size:13px}.like-btn{width:48px;height:64px}}
