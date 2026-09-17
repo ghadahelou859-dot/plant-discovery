@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#194f3e" />
   <title>اكتشف أجزاء النبتة</title>
-  <link rel="stylesheet" href="style.css?v=20260917h" />
+  <link rel="stylesheet" href="style.css?v=20260917i" />
 </head>
 <body>
   <main id="app">
-    <section id="coverScreen" class="screen active image-screen full-art-screen" style="--page-bg:url('cover.jpg')">
+    <section id="coverScreen" class="screen active image-screen">
       <img src="cover.jpg" alt="ابدأ الاكتشاف" class="screen-image" />
       <button id="coverStartBtn" class="hotspot hs-cover" aria-label="ابدأ الاكتشاف"></button>
     </section>
@@ -30,8 +30,8 @@
       <button id="showPartsBtn" class="main-btn hidden">ابدأ الاكتشاف</button>
     </section>
 
-    <section id="partsScreen" class="screen image-screen mapped-screen contain-screen full-art-screen" style="--page-bg:url('parts.png')">
-      <img id="partsImage" src="parts.png" alt="أجزاء النبتة" class="screen-image mapped-image contain-image" />
+    <section id="partsScreen" class="screen image-screen mapped-screen">
+      <img id="partsImage" src="parts.png" alt="أجزاء النبتة" class="screen-image mapped-image" />
       <button class="hotspot mapped-hotspot" data-part="roots" data-x="0.397" data-y="0.748" data-w="0.190" data-h="0.145" aria-label="الجذور"></button>
       <button class="hotspot mapped-hotspot" data-part="stem" data-x="0.745" data-y="0.455" data-w="0.190" data-h="0.155" aria-label="الساق"></button>
       <button class="hotspot mapped-hotspot" data-part="leaves" data-x="0.335" data-y="0.205" data-w="0.185" data-h="0.155" aria-label="الأوراق"></button>
@@ -40,21 +40,21 @@
       <button id="likeBtn" class="like-btn" aria-label="إعجاب"><span>❤</span><b id="likeCount">0</b></button>
     </section>
 
-    <section id="detailScreen" class="screen image-screen detail-screen contain-screen full-art-screen detail-art-screen">
-      <img id="detailImage" src="roots.png" alt="شرح الجزء" class="screen-image contain-image" />
+    <section id="detailScreen" class="screen image-screen detail-screen">
+      <img id="detailImage" src="roots.png" alt="شرح الجزء" class="screen-image" />
       <div class="detail-nav">
         <button id="detailBackBtn" class="secondary-btn">الرجوع للأجزاء</button>
         <button id="detailNextBtn" class="secondary-btn">التالي</button>
       </div>
     </section>
 
-    <section id="challengeScreen" class="screen image-screen mapped-screen contain-screen full-art-screen" style="--page-bg:url('challenge-page.png')">
-      <img id="challengeImage" src="challenge-page.png" alt="جاهزون للتحدي" class="screen-image mapped-image contain-image" />
+    <section id="challengeScreen" class="screen image-screen mapped-screen">
+      <img id="challengeImage" src="challenge-page.png" alt="جاهزون للتحدي" class="screen-image mapped-image" />
       <button id="beginQuizBtn" class="hotspot mapped-hotspot" data-x="0.225" data-y="0.670" data-w="0.540" data-h="0.210" aria-label="ابدأ التحدي"></button>
     </section>
 
-    <section id="quizScreen" class="screen image-screen mapped-screen contain-screen full-art-screen" style="--page-bg:url('quiz-background-final.png')">
-      <img id="quizImage" src="quiz-background-final.png?v=20260917h" alt="اختبر معلوماتك" class="screen-image mapped-image contain-image" />
+    <section id="quizScreen" class="screen image-screen mapped-screen">
+      <img id="quizImage" src="quiz-background-final.png?v=20260917i" alt="اختبر معلوماتك" class="screen-image mapped-image" />
       <div id="quizProgress" class="quiz-progress mapped-ui" data-x="0.715" data-y="0.145" data-w="0.105" data-h="0.060">1 / 10</div>
       <div id="timerClock" class="quiz-timer mapped-ui" data-x="0.875" data-y="0.115" data-w="0.070" data-h="0.110"><span id="timerNum">10</span></div>
       <div id="questionBox" class="question-box mapped-ui" data-x="0.265" data-y="0.265" data-w="0.540" data-h="0.120"><div id="questionText"></div></div>
@@ -62,8 +62,8 @@
       <div id="feedback" class="feedback mapped-ui" data-x="0.395" data-y="0.850" data-w="0.300" data-h="0.055"></div>
     </section>
 
-    <section id="resultScreen" class="screen image-screen mapped-screen contain-screen result-fit-screen full-art-screen" style="--page-bg:url('result-page-final.png')">
-      <img id="resultImage" src="result-page-final.png?v=20260917h" alt="أحسنت يا بطل" class="screen-image mapped-image contain-image result-fit-image" />
+    <section id="resultScreen" class="screen image-screen mapped-screen result-fit-screen">
+      <img id="resultImage" src="result-page-final.png?v=20260917i" alt="أحسنت يا بطل" class="screen-image mapped-image result-fit-image" />
       <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
       <div id="scoreText" class="score-number mapped-ui" data-x="0.405" data-y="0.335" data-w="0.185" data-h="0.115"></div>
 
@@ -83,6 +83,6 @@
       <div id="statusToast" class="status-toast"></div>
     </section>
   </main>
-  <script src="script.js?v=20260917h"></script>
+  <script src="script.js?v=20260917i"></script>
 </body>
 </html>
