@@ -13,7 +13,7 @@
   <link rel="preload" as="image" href="quiz-seed-icon.png" />
   <link rel="preload" as="image" href="correct-badge.png" />
   <link rel="preload" as="image" href="wrong-badge.png" />
-  <link rel="stylesheet" href="style.css?v=20260917l" />
+  <link rel="stylesheet" href="style.css?v=20260917m" />
 </head>
 <body>
   <main id="app">
@@ -62,7 +62,7 @@
     </section>
 
     <section id="quizScreen" class="screen image-screen mapped-screen">
-      <img id="quizImage" src="quiz-background-final.png?v=20260917l" alt="اختبر معلوماتك" class="screen-image mapped-image" />
+      <img id="quizImage" src="quiz-background-final.png?v=20260917m" alt="اختبر معلوماتك" class="screen-image mapped-image" />
       <div id="quizProgress" class="quiz-progress mapped-ui" data-x="0.715" data-y="0.145" data-w="0.105" data-h="0.060">1 / 10</div>
       <div id="timerClock" class="quiz-timer mapped-ui" data-x="0.875" data-y="0.115" data-w="0.070" data-h="0.110"><span id="timerNum">10</span></div>
       <div id="questionBox" class="question-box mapped-ui" data-x="0.265" data-y="0.265" data-w="0.540" data-h="0.120"><div id="questionText"></div></div>
@@ -71,54 +71,70 @@
     </section>
 
     <section id="resultScreen" class="screen image-screen mapped-screen result-fit-screen">
-      <img id="resultImage" src="result-page-final.png?v=20260917l" alt="أحسنت يا بطل" class="screen-image mapped-image result-fit-image" />
+      <img id="resultImage" src="result-page-final.png?v=20260917m" alt="أحسنت يا بطل" class="screen-image mapped-image result-fit-image" />
       <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
-
       <div id="scoreText" class="score-number mapped-ui" data-x="0.402" data-y="0.349" data-w="0.185" data-h="0.123"></div>
-
       <a id="whatsappContactBtn" class="whatsapp-hotspot mapped-ui" data-x="0.495" data-y="0.588" data-w="0.151" data-h="0.082" href="https://wa.me/970598494977" target="_blank" rel="noopener" aria-label="تواصل معنا عبر واتساب"></a>
-
       <div id="ratingStars" class="hidden-rating" aria-hidden="true">
         <button data-rate="1"></button><button data-rate="2"></button><button data-rate="3"></button><button data-rate="4"></button><button data-rate="5"></button>
       </div>
-
       <textarea id="ideaInput" class="idea-input mapped-ui" data-x="0.289" data-y="0.748" data-w="0.229" data-h="0.063" rows="2" placeholder="اكتب فكرتك هنا"></textarea>
       <button id="sendIdeaBtn" class="transparent-action mapped-ui" data-x="0.520" data-y="0.748" data-w="0.121" data-h="0.063" aria-label="إرسال الفكرة"></button>
-
       <a class="transparent-action mapped-ui" data-x="0.672" data-y="0.596" data-w="0.046" data-h="0.105" href="https://www.instagram.com/ghada.invitations/" target="_blank" rel="noopener" aria-label="Instagram"></a>
       <a class="transparent-action mapped-ui" data-x="0.728" data-y="0.596" data-w="0.046" data-h="0.105" href="https://www.tiktok.com/@ghada.invitations" target="_blank" rel="noopener" aria-label="TikTok"></a>
       <a class="transparent-action mapped-ui" data-x="0.785" data-y="0.596" data-w="0.046" data-h="0.105" href="https://www.snapchat.com/add/ghada.invitations" target="_blank" rel="noopener" aria-label="Snapchat"></a>
-
       <button id="restartQuizBtn" class="transparent-action mapped-ui" data-x="0.371" data-y="0.847" data-w="0.166" data-h="0.089" aria-label="إعادة التحدي"></button>
       <button id="returnPartsBtn" class="transparent-action mapped-ui" data-x="0.552" data-y="0.847" data-w="0.174" data-h="0.089" aria-label="الرجوع للأجزاء"></button>
       <div id="statusToast" class="status-toast"></div>
     </section>
   </main>
-  <script src="script.js?v=20260917l"></script>
+  <script src="script.js?v=20260917m"></script>
   <script>
-    function portraitMappedX(screenId){
-      if(!window.matchMedia('(orientation: portrait) and (max-width: 700px)').matches)return .5;
-      const positions={partsScreen:.68,challengeScreen:.50,quizScreen:.52,resultScreen:.55};
-      return positions[screenId]??.5;
+    function isPortraitMobile(){
+      return window.matchMedia('(orientation: portrait) and (max-width: 700px)').matches;
     }
+
     function layoutMappedElements(screenId,imageId){
       const screen=document.getElementById(screenId);
       const image=document.getElementById(imageId);
       if(!screen||!image||!image.naturalWidth||!screen.classList.contains('active'))return;
-      const cw=screen.clientWidth,ch=screen.clientHeight,nw=image.naturalWidth,nh=image.naturalHeight;
-      const scale=Math.max(cw/nw,ch/nh);
-      const renderedW=nw*scale,renderedH=nh*scale;
-      const posX=portraitMappedX(screenId);
-      const offsetX=(cw-renderedW)*posX;
+
+      const cw=screen.clientWidth;
+      const ch=screen.clientHeight;
+      const nw=image.naturalWidth;
+      const nh=image.naturalHeight;
+      const portrait=isPortraitMobile();
+      const scale=portrait?Math.min(cw/nw,ch/nh):Math.max(cw/nw,ch/nh);
+      const renderedW=nw*scale;
+      const renderedH=nh*scale;
+      const offsetX=(cw-renderedW)/2;
       const offsetY=(ch-renderedH)/2;
+
       screen.querySelectorAll('.mapped-hotspot,.mapped-ui').forEach(el=>{
-        const x=Number(el.dataset.x||0),y=Number(el.dataset.y||0),w=Number(el.dataset.w||0),h=Number(el.dataset.h||0);
+        const x=Number(el.dataset.x||0);
+        const y=Number(el.dataset.y||0);
+        const w=Number(el.dataset.w||0);
+        const h=Number(el.dataset.h||0);
         el.style.left=`${offsetX+x*renderedW}px`;
         el.style.top=`${offsetY+y*renderedH}px`;
         el.style.width=`${w*renderedW}px`;
         el.style.height=`${h*renderedH}px`;
       });
     }
+
+    const detailScreenEl=document.getElementById('detailScreen');
+    const detailImageEl=document.getElementById('detailImage');
+    function syncDetailPortraitBackground(){
+      const src=detailImageEl.getAttribute('src')||'roots.png';
+      detailScreenEl.style.backgroundImage=`url('${src}')`;
+      detailScreenEl.style.backgroundSize='cover';
+      detailScreenEl.style.backgroundPosition='center';
+      detailScreenEl.style.backgroundRepeat='no-repeat';
+    }
+    syncDetailPortraitBackground();
+    new MutationObserver(syncDetailPortraitBackground).observe(detailImageEl,{attributes:true,attributeFilter:['src']});
+    window.addEventListener('resize',layoutAllMappedElements);
+    window.addEventListener('orientationchange',()=>setTimeout(layoutAllMappedElements,180));
   </script>
 </body>
 </html>
