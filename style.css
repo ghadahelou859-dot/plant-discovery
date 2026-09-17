@@ -68,9 +68,32 @@ body{min-height:100dvh}
   #challengeScreen{background-image:url('challenge-page.png')}
   #quizScreen{background-image:url('quiz-background-final.png')}
   #resultScreen{background-image:url('result-page-final.png')}
+  #coverScreen::before,#partsScreen::before,#detailScreen::before,#challengeScreen::before,#quizScreen::before,#resultScreen::before{
+    content:"";
+    position:absolute;
+    inset:-10%;
+    z-index:0;
+    background-image:inherit;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    filter:blur(30px) brightness(.72) saturate(.95);
+    transform:scale(1.15);
+    pointer-events:none;
+  }
+  #coverScreen,#partsScreen,#detailScreen,#challengeScreen,#quizScreen,#resultScreen{
+    background-image:none;
+  }
+  #coverScreen::before{background-image:url('cover.jpg')}
+  #partsScreen::before{background-image:url('parts.png')}
+  #detailScreen::before{background-image:url('roots.png')}
+  #challengeScreen::before{background-image:url('challenge-page.png')}
+  #quizScreen::before{background-image:url('quiz-background-final.png')}
+  #resultScreen::before{background-image:url('result-page-final.png')}
   #coverImage,#partsImage,#detailImage,#challengeImage,#quizImage,#resultImage{
     object-fit:contain!important;
     object-position:center center!important;
+    z-index:1;
   }
 }
 @media (orientation:landscape) and (max-height:600px){.detail-nav{bottom:8px}.detail-nav .secondary-btn{padding:8px 12px;font-size:13px}.like-btn{width:48px;height:64px}}
