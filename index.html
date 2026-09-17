@@ -13,7 +13,7 @@
   <link rel="preload" as="image" href="quiz-seed-icon.png" />
   <link rel="preload" as="image" href="correct-badge.png" />
   <link rel="preload" as="image" href="wrong-badge.png" />
-  <link rel="stylesheet" href="style.css?v=20260917k" />
+  <link rel="stylesheet" href="style.css?v=20260917l" />
 </head>
 <body>
   <main id="app">
@@ -62,7 +62,7 @@
     </section>
 
     <section id="quizScreen" class="screen image-screen mapped-screen">
-      <img id="quizImage" src="quiz-background-final.png?v=20260917k" alt="اختبر معلوماتك" class="screen-image mapped-image" />
+      <img id="quizImage" src="quiz-background-final.png?v=20260917l" alt="اختبر معلوماتك" class="screen-image mapped-image" />
       <div id="quizProgress" class="quiz-progress mapped-ui" data-x="0.715" data-y="0.145" data-w="0.105" data-h="0.060">1 / 10</div>
       <div id="timerClock" class="quiz-timer mapped-ui" data-x="0.875" data-y="0.115" data-w="0.070" data-h="0.110"><span id="timerNum">10</span></div>
       <div id="questionBox" class="question-box mapped-ui" data-x="0.265" data-y="0.265" data-w="0.540" data-h="0.120"><div id="questionText"></div></div>
@@ -71,7 +71,7 @@
     </section>
 
     <section id="resultScreen" class="screen image-screen mapped-screen result-fit-screen">
-      <img id="resultImage" src="result-page-final.png?v=20260917k" alt="أحسنت يا بطل" class="screen-image mapped-image result-fit-image" />
+      <img id="resultImage" src="result-page-final.png?v=20260917l" alt="أحسنت يا بطل" class="screen-image mapped-image result-fit-image" />
       <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
 
       <div id="scoreText" class="score-number mapped-ui" data-x="0.402" data-y="0.349" data-w="0.185" data-h="0.123"></div>
@@ -94,6 +94,31 @@
       <div id="statusToast" class="status-toast"></div>
     </section>
   </main>
-  <script src="script.js?v=20260917k"></script>
+  <script src="script.js?v=20260917l"></script>
+  <script>
+    function portraitMappedX(screenId){
+      if(!window.matchMedia('(orientation: portrait) and (max-width: 700px)').matches)return .5;
+      const positions={partsScreen:.68,challengeScreen:.50,quizScreen:.52,resultScreen:.55};
+      return positions[screenId]??.5;
+    }
+    function layoutMappedElements(screenId,imageId){
+      const screen=document.getElementById(screenId);
+      const image=document.getElementById(imageId);
+      if(!screen||!image||!image.naturalWidth||!screen.classList.contains('active'))return;
+      const cw=screen.clientWidth,ch=screen.clientHeight,nw=image.naturalWidth,nh=image.naturalHeight;
+      const scale=Math.max(cw/nw,ch/nh);
+      const renderedW=nw*scale,renderedH=nh*scale;
+      const posX=portraitMappedX(screenId);
+      const offsetX=(cw-renderedW)*posX;
+      const offsetY=(ch-renderedH)/2;
+      screen.querySelectorAll('.mapped-hotspot,.mapped-ui').forEach(el=>{
+        const x=Number(el.dataset.x||0),y=Number(el.dataset.y||0),w=Number(el.dataset.w||0),h=Number(el.dataset.h||0);
+        el.style.left=`${offsetX+x*renderedW}px`;
+        el.style.top=`${offsetY+y*renderedH}px`;
+        el.style.width=`${w*renderedW}px`;
+        el.style.height=`${h*renderedH}px`;
+      });
+    }
+  </script>
 </body>
 </html>
