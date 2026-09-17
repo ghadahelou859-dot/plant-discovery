@@ -1,166 +1,299 @@
-(() => {
-  'use strict';
+const screens=[...document.querySelectorAll('.screen')];
+const showScreen=id=>screens.forEach(s=>s.classList.toggle('active',s.id===id));
 
-  const screens = {
-    cover: document.getElementById('coverScreen'),
-    video: document.getElementById('videoScreen'),
-    growth: document.getElementById('growthScreen'),
-    parts: document.getElementById('partsScreen'),
-    detail: document.getElementById('detailScreen'),
-    challenge: document.getElementById('challengeScreen'),
-    quiz: document.getElementById('quizScreen'),
-    result: document.getElementById('resultScreen')
-  };
+const coverStartBtn=document.getElementById('coverStartBtn');
+const introVideo=document.getElementById('introVideo');
+const playIntroBtn=document.getElementById('playIntroBtn');
+const goGrowthBtn=document.getElementById('goGrowthBtn');
+const growthVideo=document.getElementById('growthVideo');
+const playGrowthBtn=document.getElementById('playGrowthBtn');
+const showPartsBtn=document.getElementById('showPartsBtn');
+const detailImage=document.getElementById('detailImage');
+const detailBackBtn=document.getElementById('detailBackBtn');
+const detailNextBtn=document.getElementById('detailNextBtn');
+const beginQuizBtn=document.getElementById('beginQuizBtn');
+const quizProgress=document.getElementById('quizProgress');
+const timerNum=document.getElementById('timerNum');
+const questionText=document.getElementById('questionText');
+const answersEl=document.getElementById('answers');
+const feedbackEl=document.getElementById('feedback');
+const scoreText=document.getElementById('scoreText');
+const restartQuizBtn=document.getElementById('restartQuizBtn');
+const returnPartsBtn=document.getElementById('returnPartsBtn');
+const ratingStars=document.getElementById('ratingStars');
+const ratingMsg=document.getElementById('ratingMsg');
+const ideaInput=document.getElementById('ideaInput');
+const sendIdeaBtn=document.getElementById('sendIdeaBtn');
+const ideaMsg=document.getElementById('ideaMsg');
+const likeBtn=document.getElementById('likeBtn');
+const likeCount=document.getElementById('likeCount');
 
-  const potStartBtn = document.getElementById('potStartBtn');
-  const introVideo = document.getElementById('introVideo');
-  const growthVideo = document.getElementById('growthVideo');
-  const manualPlayBtn = document.getElementById('manualPlayBtn');
-  const growthPlayBtn = document.getElementById('growthPlayBtn');
-  const discoverBtn = document.getElementById('discoverBtn');
-  const backBtn = document.getElementById('backBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const detailImage = document.getElementById('detailImage');
-  const beginChallengeBtn = document.getElementById('beginChallengeBtn');
-  const quizProgress = document.getElementById('quizProgress');
-  const timer = document.getElementById('timer');
-  const timerNumber = document.getElementById('timerNumber');
-  const questionText = document.getElementById('questionText');
-  const answersEl = document.getElementById('answers');
-  const feedback = document.getElementById('feedback');
-  const nextQuestionBtn = document.getElementById('nextQuestionBtn');
-  const scoreText = document.getElementById('scoreText');
-  const restartQuizBtn = document.getElementById('restartQuizBtn');
-  const returnPartsBtn = document.getElementById('returnPartsBtn');
-  const ratingButtons = [...document.querySelectorAll('[data-rating]')];
-  const ratingStatus = document.getElementById('ratingStatus');
-  const ideaText = document.getElementById('ideaText');
-  const submitIdeaBtn = document.getElementById('submitIdeaBtn');
-  const ideaStatus = document.getElementById('ideaStatus');
-  const likeBtn = document.getElementById('likeBtn');
-  const likeCount = document.getElementById('likeCount');
+const parts=[
+  {key:'roots',title:'الجذور',image:'roots.png'},
+  {key:'stem',title:'الساق',image:'stem.png'},
+  {key:'leaves',title:'الأوراق',image:'leaves.png'},
+  {key:'flower',title:'الزهرة',image:'flower.png'},
+  {key:'fruit',title:'الثمرة',image:'fruit.png'}
+];
+let currentPartIndex=0;
 
-  const partOrder = ['roots','stem','leaves','flower','fruit'];
-  const partInfo = {
-    roots:{img:'roots.png',title:'الجذور'},
-    stem:{img:'stem.png',title:'الساق'},
-    leaves:{img:'leaves.png',title:'الأوراق'},
-    flower:{img:'flower.png',title:'الزهرة'},
-    fruit:{img:'fruit.png',title:'الثمرة'}
-  };
+const questions=[
+  {type:'image',q:'ما الجزء الذي يثبت النبتة في التربة ويمتص الماء؟',options:[
+    {label:'الجذور',image:'quiz-roots.png',correct:true},{label:'الزهرة',image:'quiz-flower.png'},{label:'الساق',image:'quiz-stem.png'},{label:'الثمرة',image:'quiz-fruit.png'}]},
+  {type:'image',q:'ما الجزء الذي يحمل الأوراق والأزهار والثمار؟',options:[
+    {label:'الساق',image:'quiz-stem.png',correct:true},{label:'الأوراق',image:'quiz-leaves.png'},{label:'البذرة',image:'quiz-seed.png'},{label:'الجذور',image:'quiz-roots.png'}]},
+  {type:'image',q:'أي جزء يصنع غذاء النبتة؟',options:[
+    {label:'الأوراق',image:'quiz-leaves.png',correct:true},{label:'الثمرة',image:'quiz-fruit.png'},{label:'الزهرة',image:'quiz-flower.png'},{label:'الجذور',image:'quiz-roots.png'}]},
+  {type:'image',q:'من أي جزء تبدأ حياة النبتة؟',options:[
+    {label:'البذرة',image:'quiz-seed.png',correct:true},{label:'الأوراق',image:'quiz-leaves.png'},{label:'الساق',image:'quiz-stem.png'},{label:'الثمرة',image:'quiz-fruit.png'}]},
+  {type:'image',q:'أي جزء يتحول بعد ذلك إلى ثمرة؟',options:[
+    {label:'الزهرة',image:'quiz-flower.png',correct:true},{label:'الساق',image:'quiz-stem.png'},{label:'البذرة',image:'quiz-seed.png'},{label:'الجذور',image:'quiz-roots.png'}]},
+  {type:'image',q:'في أي جزء نجد البذور غالبًا؟',options:[
+    {label:'الثمرة',image:'quiz-fruit.png',correct:true},{label:'الزهرة',image:'quiz-flower.png'},{label:'الجذور',image:'quiz-roots.png'},{label:'الأوراق',image:'quiz-leaves.png'}]},
+  {type:'tf',q:'صح أم خطأ: الجذور توجد تحت التربة.',options:[{label:'صح',correct:true},{label:'خطأ'}]},
+  {type:'tf',q:'صح أم خطأ: الأوراق تمتص الماء من التربة.',options:[{label:'صح'},{label:'خطأ',correct:true}]},
+  {type:'text',q:'ما أول ما يظهر من البذرة عند النمو؟',options:[{label:'الجذر',correct:true},{label:'الثمرة'},{label:'الزهرة'},{label:'الورقة'}]},
+  {type:'text',q:'كم عدد أجزاء النبتة التي تعلمناها في هذا الدرس؟',options:[{label:'خمسة أجزاء',correct:true},{label:'جزءان'},{label:'سبعة أجزاء'},{label:'ثلاثة أجزاء'}]}
+];
 
-  const questions = [
-    {q:'أي جزء يثبّت النبتة في التربة ويمتص الماء؟',choices:['الجذور','الزهرة','الثمرة'],correct:'الجذور'},
-    {q:'الساق ينقل الماء والغذاء بين أجزاء النبتة.',choices:['نعم','لا'],correct:'نعم'},
-    {q:'أي جزء يصنع غذاء النبتة بمساعدة ضوء الشمس؟',choices:['الأوراق','الجذور','الثمرة'],correct:'الأوراق'},
-    {q:'الزهرة تساعد النبتة على تكوين الثمار والبذور.',choices:['نعم','لا'],correct:'نعم'},
-    {q:'أي جزء يحمل البذور ويحميها؟',choices:['الثمرة','الساق','الأوراق'],correct:'الثمرة'},
-    {q:'من أين تبدأ حياة النبتة؟',choices:['البذرة','الزهرة','الساق'],correct:'البذرة'},
-    {q:'أين تنمو الجذور غالبًا؟',choices:['داخل التربة','فوق الأوراق','داخل الزهرة'],correct:'داخل التربة'},
-    {q:'أي جزء يحمل الأوراق والزهور؟',choices:['الساق','الجذر','الثمرة'],correct:'الساق'},
-    {q:'هل تحتاج الأوراق إلى ضوء الشمس لتصنع الغذاء؟',choices:['نعم','لا'],correct:'نعم'},
-    {q:'بعد الزهرة، ماذا يمكن أن يتكوّن؟',choices:['الثمرة','الجذر','التربة'],correct:'الثمرة'}
-  ];
+let quizOrder=[];
+let qIndex=0;
+let score=0;
+let timer=null;
+let timeLeft=10;
+let timedOutCount=0;
+let questionLocked=false;
 
-  let currentPart='roots', qIndex=0, score=0, seconds=10, timerId=null, answered=false, currentAnswers=[], correctIndex=-1, ratingSaving=false, likeSaving=false;
-
-  function show(name){
-    Object.values(screens).forEach(s=>s.classList.remove('active'));
-    screens[name].classList.add('active');
-    window.scrollTo({top:0,behavior:'instant'});
+function shuffle(a){
+  const arr=[...a];
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
   }
+  return arr;
+}
 
-  async function playIntro(){
-    manualPlayBtn.classList.add('hidden'); introVideo.currentTime=0;
-    try{await introVideo.play();}catch(e){manualPlayBtn.classList.remove('hidden');}
-  }
-  async function startExperience(){show('video');await playIntro();}
-  async function playGrowth(){
-    growthPlayBtn.classList.add('hidden');discoverBtn.classList.add('hidden');show('growth');growthVideo.currentTime=0;
-    try{await growthVideo.play();}catch(e){growthPlayBtn.classList.remove('hidden');}
-  }
+coverStartBtn.onclick=()=>showScreen('videoScreen');
+playIntroBtn.onclick=async()=>{playIntroBtn.classList.add('hidden');introVideo.currentTime=0;try{await introVideo.play();}catch{playIntroBtn.classList.remove('hidden')}};
+introVideo.onended=()=>goGrowthBtn.classList.remove('hidden');
+introVideo.onerror=()=>goGrowthBtn.classList.remove('hidden');
+goGrowthBtn.onclick=()=>showScreen('growthScreen');
+playGrowthBtn.onclick=async()=>{playGrowthBtn.classList.add('hidden');growthVideo.currentTime=0;try{await growthVideo.play();}catch{playGrowthBtn.classList.remove('hidden')}};
+growthVideo.onended=()=>showPartsBtn.classList.remove('hidden');
+growthVideo.onerror=()=>showPartsBtn.classList.remove('hidden');
+showPartsBtn.onclick=()=>showScreen('partsScreen');
 
-  function openPart(part){
-    const info=partInfo[part]; if(!info)return;
-    currentPart=part;detailImage.src=info.img;detailImage.alt=info.title;
-    const idx=partOrder.indexOf(part);
-    nextBtn.textContent=idx===partOrder.length-1?'جاهزين للتحدي؟ 🌱':'الجزء التالي ←';
-    show('detail');
+document.querySelectorAll('[data-part]').forEach(btn=>btn.onclick=()=>openPart(btn.dataset.part));
+function openPart(key){
+  currentPartIndex=parts.findIndex(p=>p.key===key);
+  if(currentPartIndex<0)return;
+  detailImage.src=parts[currentPartIndex].image;
+  detailImage.alt=parts[currentPartIndex].title;
+  detailNextBtn.textContent=currentPartIndex===parts.length-1?'ابدأ التحدي':'الجزء التالي';
+  showScreen('detailScreen');
+}
+detailBackBtn.onclick=()=>showScreen('partsScreen');
+detailNextBtn.onclick=()=>{
+  if(currentPartIndex<parts.length-1){
+    currentPartIndex++;
+    detailImage.src=parts[currentPartIndex].image;
+    detailImage.alt=parts[currentPartIndex].title;
+    detailNextBtn.textContent=currentPartIndex===parts.length-1?'ابدأ التحدي':'الجزء التالي';
+  }else{
+    showScreen('challengeScreen');
   }
+};
+beginQuizBtn.onclick=startQuiz;
 
-  function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
-  function updateTimer(){timerNumber.textContent=seconds;timer.style.setProperty('--p',`${seconds*10}%`);}
-  function startTimer(){stopTimer();seconds=10;timer.classList.remove('expired');updateTimer();timerId=setInterval(()=>{seconds--;updateTimer();if(seconds<=0)timeUp();},1000);}
-  function timeUp(){
-    if(answered)return;answered=true;stopTimer();timer.classList.add('expired');timerNumber.textContent='0';
-    const all=[...answersEl.querySelectorAll('button')];all.forEach(b=>b.disabled=true);if(all[correctIndex])all[correctIndex].classList.add('correct');
-    feedback.textContent=`انتهى الوقت ⏰ الإجابة الصحيحة: ${currentAnswers[correctIndex]}`;feedback.className='feedback bad';nextQuestionBtn.classList.remove('hidden');
+function startQuiz(){
+  clearInterval(timer);
+  quizOrder=shuffle(questions);
+  qIndex=0;
+  score=0;
+  timedOutCount=0;
+  showScreen('quizScreen');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  clearInterval(timer);
+  questionLocked=false;
+  timeLeft=10;
+  timerNum.textContent=timeLeft;
+  feedbackEl.textContent='';
+  const q=quizOrder[qIndex];
+  quizProgress.textContent=`السؤال ${qIndex+1} من ${quizOrder.length}`;
+  questionText.textContent=q.q;
+  answersEl.innerHTML='';
+  const options=shuffle(q.options);
+  options.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='answer-btn'+((q.type==='text'||q.type==='tf')?' text-only':'');
+    const label=document.createElement('div');
+    label.className='label';
+    label.textContent=opt.label;
+    if(q.type==='image'){
+      const img=document.createElement('img');
+      img.className='option-img';
+      img.src=opt.image;
+      img.alt=opt.label;
+      btn.append(img,label);
+    }else{
+      btn.append(label);
+    }
+    btn.onclick=()=>chooseAnswer(opt,q.options.find(o=>o.correct));
+    answersEl.appendChild(btn);
+  });
+  timer=setInterval(()=>{
+    timeLeft--;
+    timerNum.textContent=timeLeft;
+    if(timeLeft<=0){
+      clearInterval(timer);
+      timedOutCount++;
+      revealAnswer(null,q.options.find(o=>o.correct),true);
+    }
+  },1000);
+}
+
+function chooseAnswer(selected,correct){
+  if(questionLocked)return;
+  questionLocked=true;
+  clearInterval(timer);
+  revealAnswer(selected,correct,false);
+}
+
+function addBadge(btn,src,alt){
+  const img=document.createElement('img');
+  img.src=src;
+  img.alt=alt;
+  img.className='answer-badge';
+  btn.appendChild(img);
+}
+
+function revealAnswer(selected,correct,isTimeout=false){
+  questionLocked=true;
+  [...answersEl.children].forEach(btn=>{
+    btn.classList.add('disabled');
+    const label=btn.querySelector('.label')?.textContent;
+    if(label===correct.label){
+      btn.classList.add('correct');
+      addBadge(btn,'correct-badge.png','صح');
+    }
+    if(selected&&label===selected.label&&selected.label!==correct.label){
+      btn.classList.add('wrong');
+      addBadge(btn,'wrong-badge.png','خطأ');
+    }
+  });
+  if(selected&&selected.label===correct.label){
+    score++;
+    feedbackEl.textContent='أحسنت يا بطل 👏';
+    playClap();
+  }else if(isTimeout){
+    feedbackEl.textContent='انتهى الوقت ⏰';
+  }else{
+    feedbackEl.textContent='إجابة غير صحيحة ❌';
   }
-  function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-  function renderQuestion(){
-    answered=false;feedback.textContent='';feedback.className='feedback';nextQuestionBtn.classList.add('hidden');
-    const item=questions[qIndex];quizProgress.textContent=`السؤال ${qIndex+1} من ${questions.length}`;questionText.textContent=item.q;answersEl.innerHTML='';
-    currentAnswers=shuffle(item.choices);correctIndex=currentAnswers.indexOf(item.correct);
-    currentAnswers.forEach((label,idx)=>{const btn=document.createElement('button');btn.type='button';btn.className='answer-btn';btn.textContent=label;btn.addEventListener('click',()=>chooseAnswer(btn,idx));answersEl.appendChild(btn);});
-    startTimer();
+  setTimeout(()=>{
+    qIndex++;
+    if(qIndex>=quizOrder.length)finishQuiz();
+    else renderQuestion();
+  },1600);
+}
+
+function finishQuiz(){
+  clearInterval(timer);
+  scoreText.textContent=`حصلت على ${score} من ${quizOrder.length} • انتهى الوقت في ${timedOutCount} سؤال`;
+  ratingStars.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  ratingMsg.textContent='';
+  ideaMsg.textContent='';
+  showScreen('resultScreen');
+}
+restartQuizBtn.onclick=startQuiz;
+returnPartsBtn.onclick=()=>showScreen('partsScreen');
+
+const SUPABASE_URL='https://jzswtwicvgppisasrkqe.supabase.co';
+const SUPABASE_KEY='sb_publishable_qJGOZoWBOrZ952qJnYTqNg_oaMSIStu';
+const INVITATION_SLUG='plant-discovery';
+function getVisitorKey(){
+  const key='invitation_visitor_key';
+  let value=localStorage.getItem(key);
+  if(!value){
+    value=self.crypto?.randomUUID?.()||`visitor-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem(key,value);
   }
-  function playApplause(){
-    try{const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;const ctx=new Ctx();const now=ctx.currentTime;for(let i=0;i<12;i++){const t=now+i*.08,dur=.055,buffer=ctx.createBuffer(1,Math.floor(ctx.sampleRate*dur),ctx.sampleRate),data=buffer.getChannelData(0);for(let j=0;j<data.length;j++)data[j]=(Math.random()*2-1)*Math.pow(1-j/data.length,3);const src=ctx.createBufferSource(),gain=ctx.createGain();src.buffer=buffer;gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.2,t+.005);gain.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(gain).connect(ctx.destination);src.start(t);}setTimeout(()=>ctx.close(),1600);}catch(e){}
-  }
-  function chooseAnswer(btn,idx){
-    if(answered)return;answered=true;stopTimer();const all=[...answersEl.querySelectorAll('button')];all.forEach(b=>b.disabled=true);
-    if(idx===correctIndex){btn.classList.add('correct');feedback.textContent='أحسنت يا بطل! 🌟';feedback.className='feedback good';score++;playApplause();}
-    else{btn.classList.add('wrong');if(all[correctIndex])all[correctIndex].classList.add('correct');feedback.textContent=`الإجابة الصحيحة: ${currentAnswers[correctIndex]}`;feedback.className='feedback bad';}
-    nextQuestionBtn.classList.remove('hidden');
-  }
-  function startQuiz(){qIndex=0;score=0;show('quiz');renderQuestion();}
-
-  const SUPABASE_URL='https://jzswtwicvgppisasrkqe.supabase.co';
-  const SUPABASE_KEY='sb_publishable_qJGOZoWBOrZ952qJnYTqNg_oaMSIStu';
-  const INVITATION_SLUG='plant-discovery';
-  function getVisitorKey(){const k='invitation_visitor_key';let v=localStorage.getItem(k);if(!v){v=self.crypto?.randomUUID?.()||'visitor-'+Date.now()+'-'+Math.random().toString(36).slice(2);localStorage.setItem(k,v);}return v;}
-  const VISITOR_KEY=getVisitorKey();
-  async function callInvitationRpc(name,body){const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error(await r.text());const t=await r.text();return t?JSON.parse(t):null;}
-  async function recordView(){try{await callInvitationRpc('record_invitation_view',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY});}catch(e){console.error(e);}}
-
-  function applyLikeStats(data){
-    const row=Array.isArray(data)?data[0]:data;if(!row)return;
-    likeCount.textContent=Number(row.like_count||0);
-    likeBtn.classList.toggle('liked',Boolean(row.liked_by_me));
-    likeBtn.setAttribute('aria-pressed',Boolean(row.liked_by_me));
-  }
-  async function loadLikeStats(){try{const data=await callInvitationRpc('get_invitation_stats',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY});applyLikeStats(data);}catch(e){console.error(e);}}
-  async function toggleLike(){if(likeSaving)return;likeSaving=true;likeBtn.disabled=true;try{await callInvitationRpc('toggle_invitation_like',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY});await loadLikeStats();}catch(e){console.error(e);}finally{likeBtn.disabled=false;likeSaving=false;}}
-  likeBtn.addEventListener('click',toggleLike);
-
-  function paintRating(value){ratingButtons.forEach(b=>b.classList.toggle('selected',Number(b.dataset.rating)<=value));}
-  async function saveRating(value){if(ratingSaving)return;ratingSaving=true;paintRating(value);ratingButtons.forEach(b=>b.disabled=true);ratingStatus.textContent='جاري حفظ التقييم…';try{await callInvitationRpc('submit_invitation_rating',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY,p_rating:value});ratingStatus.textContent='شكرًا! تم حفظ تقييمك ✓';}catch(e){ratingStatus.textContent='تعذر الحفظ، حاول مرة ثانية.';}finally{ratingButtons.forEach(b=>b.disabled=false);ratingSaving=false;}}
-  ratingButtons.forEach(b=>b.addEventListener('click',()=>saveRating(Number(b.dataset.rating))));
-
-  async function submitIdea(){
-    const idea=ideaText.value.trim();if(!idea){ideaStatus.textContent='اكتب فكرتك أولًا 🌱';ideaText.focus();return;}
-    submitIdeaBtn.disabled=true;ideaStatus.textContent='جاري إرسال الفكرة…';
-    try{await callInvitationRpc('submit_invitation_opinion',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY,p_display_name:'زائر درس أجزاء النبتة',p_opinion_text:`فكرة لتطوير التجربة: ${idea}`});ideaText.value='';ideaStatus.textContent='شكرًا لمشاركتك! فكرتك وصلت إلينا 🌱💚';submitIdeaBtn.textContent='تم الإرسال ✓';}
-    catch(e){ideaStatus.textContent='تعذر الإرسال، حاول مرة ثانية.';}finally{submitIdeaBtn.disabled=false;}
-  }
-  submitIdeaBtn.addEventListener('click',submitIdea);
-
-  potStartBtn.addEventListener('click',startExperience);
-  manualPlayBtn.addEventListener('click',playIntro);
-  growthPlayBtn.addEventListener('click',playGrowth);
-  introVideo.addEventListener('ended',playGrowth);
-  introVideo.addEventListener('error',()=>manualPlayBtn.classList.remove('hidden'));
-  growthVideo.addEventListener('ended',()=>discoverBtn.classList.remove('hidden'));
-  growthVideo.addEventListener('error',()=>discoverBtn.classList.remove('hidden'));
-  discoverBtn.addEventListener('click',()=>show('parts'));
-  document.querySelectorAll('.part-hotspot').forEach(btn=>btn.addEventListener('click',()=>openPart(btn.dataset.part)));
-  backBtn.addEventListener('click',()=>show('parts'));
-  nextBtn.addEventListener('click',()=>{const idx=partOrder.indexOf(currentPart);if(idx===partOrder.length-1)show('challenge');else openPart(partOrder[idx+1]);});
-  beginChallengeBtn.addEventListener('click',startQuiz);
-  nextQuestionBtn.addEventListener('click',()=>{qIndex++;if(qIndex>=questions.length){stopTimer();scoreText.textContent=`${score} / ${questions.length} ⭐`;paintRating(0);ratingStatus.textContent='اختاروا عدد النجوم وسيتم الحفظ تلقائيًا.';ideaStatus.textContent='';submitIdeaBtn.textContent='إرسال ✈️';show('result');}else renderQuestion();});
-  restartQuizBtn.addEventListener('click',startQuiz);
-  returnPartsBtn.addEventListener('click',()=>show('parts'));
-
-  recordView();
-  loadLikeStats();
-})();
+  return value;
+}
+const VISITOR_KEY=getVisitorKey();
+async function callRpc(name,body){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{
+    method:'POST',
+    headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+  if(!res.ok)throw new Error(await res.text());
+  const text=await res.text();
+  return text?JSON.parse(text):null;
+}
+async function refreshLike(){
+  try{
+    const data=await callRpc('get_invitation_stats',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY});
+    const row=Array.isArray(data)?data[0]:data;
+    if(row){
+      likeCount.textContent=row.like_count??0;
+      likeBtn.classList.toggle('liked',!!row.liked_by_me);
+    }
+  }catch(e){console.error(e)}
+}
+likeBtn.onclick=async()=>{
+  likeBtn.disabled=true;
+  try{
+    await callRpc('toggle_invitation_like',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY});
+    await refreshLike();
+  }catch(e){console.error(e)}
+  finally{likeBtn.disabled=false}
+};
+ratingStars.querySelectorAll('button').forEach(btn=>btn.onclick=async()=>{
+  const r=+btn.dataset.rate;
+  ratingStars.querySelectorAll('button').forEach(b=>b.classList.toggle('active',+b.dataset.rate<=r));
+  ratingMsg.textContent='جاري حفظ التقييم…';
+  try{
+    await callRpc('submit_invitation_rating',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY,p_rating:r});
+    ratingMsg.textContent='شكرًا! تم حفظ تقييمك ✓';
+  }catch(e){ratingMsg.textContent='تعذر الحفظ، حاولي مرة ثانية.'}
+});
+sendIdeaBtn.onclick=async()=>{
+  const idea=ideaInput.value.trim();
+  if(!idea){ideaMsg.textContent='اكتب فكرتك أولًا 🌱';return}
+  sendIdeaBtn.disabled=true;
+  ideaMsg.textContent='جاري الإرسال…';
+  try{
+    await callRpc('submit_invitation_opinion',{
+      p_slug:INVITATION_SLUG,
+      p_visitor_key:VISITOR_KEY,
+      p_display_name:'زائر درس أجزاء النبتة',
+      p_opinion_text:`فكرة لتطوير التجربة: ${idea}`
+    });
+    ideaInput.value='';
+    ideaMsg.textContent='شكرًا لمشاركتك! فكرتك وصلت إلينا 🌱💚';
+  }catch(e){ideaMsg.textContent='تعذر الإرسال، حاولي مرة ثانية.'}
+  finally{sendIdeaBtn.disabled=false}
+};
+async function recordView(){
+  try{await callRpc('record_invitation_view',{p_slug:INVITATION_SLUG,p_visitor_key:VISITOR_KEY})}catch(e){console.error(e)}
+}
+function playClap(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const now=ctx.currentTime;
+    for(let i=0;i<3;i++){
+      const buffer=ctx.createBuffer(1,ctx.sampleRate*.11,ctx.sampleRate);
+      const data=buffer.getChannelData(0);
+      for(let j=0;j<data.length;j++)data[j]=(Math.random()*2-1)*Math.exp(-j/(ctx.sampleRate*.02));
+      const src=ctx.createBufferSource(),gain=ctx.createGain();
+      src.buffer=buffer;src.connect(gain);gain.connect(ctx.destination);gain.gain.value=.13;src.start(now+i*.14);
+    }
+  }catch(e){}
+}
+recordView();
+refreshLike();
