@@ -211,33 +211,58 @@ function stopGrowthMusic(){
   if(growthAudioCtx){try{growthAudioCtx.close();}catch(e){}growthAudioCtx=null;}
 }
 
-coverStartBtn.onclick=()=>showScreen('videoScreen');
-playIntroBtn.onclick=async()=>{
+async function tryPlayIntro(){
   playIntroBtn.classList.add('hidden');
-  introVideo.currentTime=0;
-  try{await introVideo.play();}
-  catch{
+  try{
+    introVideo.currentTime=0;
+    await introVideo.play();
+    return true;
+  }catch(e){
     playIntroBtn.classList.remove('hidden');
+    return false;
   }
-};
-introVideo.onended=()=>showScreen('growthScreen');
-introVideo.onerror=()=>showScreen('growthScreen');
-skipIntroBtn.onclick=()=>{
-  try{introVideo.pause();}catch(e){}
-  showScreen('growthScreen');
-};
-playGrowthBtn.onclick=async()=>{
+}
+
+async function tryPlayGrowth(){
   playGrowthBtn.classList.add('hidden');
-  growthVideo.currentTime=0;
-  try{startGrowthMusic();await growthVideo.play();}
-  catch{
+  try{
+    growthVideo.currentTime=0;
+    startGrowthMusic();
+    await growthVideo.play();
+    return true;
+  }catch(e){
     stopGrowthMusic();
     playGrowthBtn.classList.remove('hidden');
+    return false;
   }
+}
+
+coverStartBtn.onclick=async()=>{
+  showScreen('videoScreen');
+  if(isPortraitMobile()) await tryPlayIntro();
 };
+
+playIntroBtn.onclick=()=>tryPlayIntro();
+
+introVideo.onended=async()=>{
+  showScreen('growthScreen');
+  if(isPortraitMobile()) await tryPlayGrowth();
+};
+
+introVideo.onerror=()=>showScreen('growthScreen');
+
+skipIntroBtn.onclick=async()=>{
+  try{introVideo.pause();}catch(e){}
+  showScreen('growthScreen');
+  if(isPortraitMobile()) await tryPlayGrowth();
+};
+
+playGrowthBtn.onclick=()=>tryPlayGrowth();
+
 growthVideo.onended=()=>{stopGrowthMusic();showScreen('partsScreen')};
 growthVideo.onerror=()=>{stopGrowthMusic();showScreen('partsScreen')};
 growthVideo.addEventListener('pause',()=>{if(!growthVideo.ended)stopGrowthMusic()});
+
 skipGrowthBtn.onclick=()=>{
   try{growthVideo.pause();}catch(e){}
   stopGrowthMusic();
