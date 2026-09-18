@@ -13,17 +13,17 @@
   <link rel="preload" as="image" href="quiz-seed-icon.png" />
   <link rel="preload" as="image" href="correct-badge.png" />
   <link rel="preload" as="image" href="wrong-badge.png" />
-  <link rel="stylesheet" href="style.css?v=20260918p" />
+  <link rel="stylesheet" href="style.css?v=20260918v" />
 </head>
 <body>
   <main id="app">
     <section id="coverScreen" class="screen active image-screen mapped-screen">
-      <img id="coverImage" src="cover.jpg?v=20260918p" data-desktop-src="cover.jpg?v=20260918p" data-mobile-src="cover-mobile.png?v=20260918p" alt="ابدأ الاكتشاف" class="screen-image mapped-image" />
+      <img id="coverImage" src="cover.jpg?v=20260918v" data-desktop-src="cover.jpg?v=20260918v" data-mobile-src="cover-mobile.png?v=20260918v" alt="ابدأ الاكتشاف" class="screen-image mapped-image" />
       <button id="coverStartBtn" class="hotspot mapped-hotspot" data-x="0.250" data-y="0.780" data-w="0.500" data-h="0.100" data-px="0.185" data-py="0.820" data-pw="0.630" data-ph="0.085" aria-label="ابدأ الاكتشاف"></button>
     </section>
 
     <section id="videoScreen" class="screen center-screen">
-      <video id="introVideo" class="fullscreen-video" playsinline preload="metadata" controlslist="nodownload noplaybackrate" disablepictureinpicture>
+      <video id="introVideo" class="fullscreen-video" playsinline preload="metadata" controlslist="nodownload noplaybackrate" disablepictureinpicture data-desktop-src="intro.mp4" data-mobile-src="intro-mobile.mp4">
         <source src="intro.mp4" type="video/mp4" />
       </video>
       <button id="playIntroBtn" class="main-btn">تشغيل الفيديو</button>
@@ -31,7 +31,7 @@
     </section>
 
     <section id="growthScreen" class="screen center-screen">
-      <video id="growthVideo" class="fullscreen-video" playsinline preload="metadata" controlslist="nodownload noplaybackrate" disablepictureinpicture>
+      <video id="growthVideo" class="fullscreen-video" playsinline preload="metadata" controlslist="nodownload noplaybackrate" disablepictureinpicture data-desktop-src="growth.mp4" data-mobile-src="growth-mobile.mp4">
         <source src="growth.mp4" type="video/mp4" />
       </video>
       <button id="playGrowthBtn" class="main-btn">شغّل رحلة النمو</button>
@@ -39,7 +39,7 @@
     </section>
 
     <section id="partsScreen" class="screen image-screen mapped-screen">
-      <img id="partsImage" src="parts.png" data-desktop-src="parts.png" data-mobile-src="parts-mobile.png?v=20260918p" alt="أجزاء النبتة" class="screen-image mapped-image" />
+      <img id="partsImage" src="parts.png" data-desktop-src="parts.png" data-mobile-src="parts-mobile.png?v=20260918v" alt="أجزاء النبتة" class="screen-image mapped-image" />
       <button class="hotspot mapped-hotspot" data-part="roots" data-x="0.397" data-y="0.748" data-w="0.190" data-h="0.145" data-px="0.700" data-py="0.650" data-pw="0.245" data-ph="0.075" aria-label="الجذور"></button>
       <button class="hotspot mapped-hotspot" data-part="stem" data-x="0.745" data-y="0.455" data-w="0.190" data-h="0.155" data-px="0.700" data-py="0.535" data-pw="0.245" data-ph="0.070" aria-label="الساق"></button>
       <button class="hotspot mapped-hotspot" data-part="leaves" data-x="0.335" data-y="0.205" data-w="0.185" data-h="0.155" data-px="0.285" data-py="0.455" data-pw="0.245" data-ph="0.070" aria-label="الأوراق"></button>
@@ -57,12 +57,12 @@
     </section>
 
     <section id="challengeScreen" class="screen image-screen mapped-screen">
-      <img id="challengeImage" src="challenge-page.png" data-desktop-src="challenge-page.png" data-mobile-src="challenge-mobile.png?v=20260918p" alt="جاهزون للتحدي" class="screen-image mapped-image" />
+      <img id="challengeImage" src="challenge-page.png" data-desktop-src="challenge-page.png" data-mobile-src="challenge-mobile.png?v=20260918v" alt="جاهزون للتحدي" class="screen-image mapped-image" />
       <button id="beginQuizBtn" class="hotspot mapped-hotspot" data-x="0.225" data-y="0.670" data-w="0.540" data-h="0.210" data-px="0.205" data-py="0.815" data-pw="0.590" data-ph="0.085" aria-label="ابدأ التحدي"></button>
     </section>
 
     <section id="quizScreen" class="screen image-screen mapped-screen">
-      <img id="quizImage" src="quiz-background-final.png?v=20260918p" data-desktop-src="quiz-background-final.png?v=20260918p" data-mobile-src="quiz-mobile.png?v=20260918p" alt="اختبر معلوماتك" class="screen-image mapped-image" />
+      <img id="quizImage" src="quiz-background-final.png?v=20260918v" data-desktop-src="quiz-background-final.png?v=20260918v" data-mobile-src="quiz-mobile.png?v=20260918v" alt="اختبر معلوماتك" class="screen-image mapped-image" />
       <div id="quizProgress" class="quiz-progress mapped-ui" data-x="0.715" data-y="0.145" data-w="0.105" data-h="0.060" data-px="0.035" data-py="0.205" data-pw="0.145" data-ph="0.080">1 / 10</div>
       <div id="timerClock" class="quiz-timer mapped-ui" data-x="0.875" data-y="0.115" data-w="0.070" data-h="0.110" data-px="0.800" data-py="0.190" data-pw="0.155" data-ph="0.120"><span id="timerNum">10</span></div>
       <div id="questionBox" class="question-box mapped-ui" data-x="0.265" data-y="0.265" data-w="0.540" data-h="0.120" data-px="0.300" data-py="0.325" data-pw="0.650" data-ph="0.100"><div id="questionText"></div></div>
@@ -71,7 +71,7 @@
     </section>
 
     <section id="resultScreen" class="screen image-screen mapped-screen result-fit-screen">
-      <img id="resultImage" src="result-page-final.png?v=20260918p" data-desktop-src="result-page-final.png?v=20260918p" data-mobile-src="result-mobile.png?v=20260918p" alt="أحسنت يا بطل" class="screen-image mapped-image result-fit-image" />
+      <img id="resultImage" src="result-page-final.png?v=20260918v" data-desktop-src="result-page-final.png?v=20260918v" data-mobile-src="result-mobile.png?v=20260918v" alt="أحسنت يا بطل" class="screen-image mapped-image result-fit-image" />
       <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
       <div id="scoreText" class="score-number mapped-ui" data-x="0.402" data-y="0.349" data-w="0.185" data-h="0.123" data-px="0.375" data-py="0.410" data-pw="0.410" data-ph="0.090"></div>
       <a id="whatsappContactBtn" class="whatsapp-hotspot mapped-ui" data-x="0.495" data-y="0.588" data-w="0.151" data-h="0.082" data-px="0.605" data-py="0.555" data-pw="0.250" data-ph="0.055" href="https://wa.me/970598494977" target="_blank" rel="noopener" aria-label="تواصل معنا عبر واتساب"></a>
@@ -86,6 +86,6 @@
       <div id="statusToast" class="status-toast"></div>
     </section>
   </main>
-  <script src="script.js?v=20260918p"></script>
+  <script src="script.js?v=20260918v"></script>
 </body>
 </html>
