@@ -56,9 +56,11 @@ const coverImage=document.getElementById('coverImage');
 const coverStartBtn=document.getElementById('coverStartBtn');
 const introVideo=document.getElementById('introVideo');
 const playIntroBtn=document.getElementById('playIntroBtn');
+const skipIntroBtn=document.getElementById('skipIntroBtn');
 const goGrowthBtn=document.getElementById('goGrowthBtn');
 const growthVideo=document.getElementById('growthVideo');
 const playGrowthBtn=document.getElementById('playGrowthBtn');
+const skipGrowthBtn=document.getElementById('skipGrowthBtn');
 const showPartsBtn=document.getElementById('showPartsBtn');
 const partsImage=document.getElementById('partsImage');
 const challengeImage=document.getElementById('challengeImage');
@@ -215,6 +217,10 @@ playIntroBtn.onclick=async()=>{playIntroBtn.classList.add('hidden');introVideo.c
 introVideo.onended=()=>goGrowthBtn.classList.remove('hidden');
 introVideo.onerror=()=>goGrowthBtn.classList.remove('hidden');
 goGrowthBtn.onclick=()=>showScreen('growthScreen');
+skipIntroBtn.onclick=()=>{
+  try{introVideo.pause();}catch(e){}
+  showScreen('growthScreen');
+};
 playGrowthBtn.onclick=async()=>{
   playGrowthBtn.classList.add('hidden');
   growthVideo.currentTime=0;
@@ -225,6 +231,11 @@ growthVideo.onended=()=>{stopGrowthMusic();showPartsBtn.classList.remove('hidden
 growthVideo.onerror=()=>{stopGrowthMusic();showPartsBtn.classList.remove('hidden')};
 growthVideo.addEventListener('pause',()=>{if(!growthVideo.ended)stopGrowthMusic()});
 showPartsBtn.onclick=()=>{stopGrowthMusic();showScreen('partsScreen')};
+skipGrowthBtn.onclick=()=>{
+  try{growthVideo.pause();}catch(e){}
+  stopGrowthMusic();
+  showScreen('partsScreen');
+};
 
 document.querySelectorAll('[data-part]').forEach(btn=>btn.onclick=()=>openPart(btn.dataset.part));
 function openPart(key){
@@ -269,7 +280,7 @@ function renderQuestion(){
   timerNum.textContent=timeLeft;
   feedbackEl.textContent='';
   const q=quizOrder[qIndex];
-  quizProgress.textContent=`${qIndex+1} / ${quizOrder.length}`;
+  quizProgress.textContent=isPortraitMobile()?String(qIndex+1):`${qIndex+1} / ${quizOrder.length}`;
   questionText.textContent=q.q;
   answersEl.innerHTML='';
   const options=shuffle(q.options);
