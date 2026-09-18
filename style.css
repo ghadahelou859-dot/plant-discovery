@@ -175,3 +175,52 @@ body{min-height:100dvh}
 }
 
 @media (orientation:landscape) and (max-height:600px){.detail-nav{bottom:8px}.detail-nav .secondary-btn{padding:8px 12px;font-size:13px}.like-btn{width:48px;height:64px}}
+
+.mobile-skip-btn{
+  display:none;
+}
+@media (orientation:portrait) and (max-width:700px){
+  .mobile-skip-btn{
+    display:block;
+    position:absolute;
+    top:max(14px,env(safe-area-inset-top));
+    right:14px;
+    z-index:12;
+    border:1px solid rgba(255,255,255,.65);
+    background:rgba(0,0,0,.35);
+    color:#fff;
+    border-radius:999px;
+    padding:8px 13px;
+    font-size:14px;
+    font-weight:800;
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    cursor:pointer;
+  }
+  #quizProgress{
+    direction:ltr;
+    font-size:clamp(13px,4vw,18px);
+  }
+  #timerClock{
+    font-size:clamp(20px,6.2vw,30px);
+    line-height:1;
+  }
+  #questionText{
+    width:100%;
+    text-align:center;
+  }
+  #answers{
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  #answers .answer-btn{
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  #feedback{
+    background:transparent!important;
+    color:#173f32!important;
+    text-shadow:none!important;
+    font-size:clamp(11px,3.2vw,15px)!important;
+  }
+}
