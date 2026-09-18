@@ -78,13 +78,20 @@ body{min-height:100dvh}
   #detailNextBtn{
     position:absolute!important;
     left:18%!important;
-    top:81.5%!important;
+    bottom:max(18px,env(safe-area-inset-bottom))!important;
+    top:auto!important;
     width:64%!important;
-    height:9%!important;
+    height:auto!important;
     max-width:none!important;
-    padding:0!important;
-    border:0!important;
-    opacity:0!important;
+    padding:14px 18px!important;
+    border:2px solid #c9a66b!important;
+    opacity:1!important;
+    color:#fff!important;
+    background:#6f9642!important;
+    font-size:16px!important;
+    font-weight:900!important;
+    border-radius:18px!important;
+    box-shadow:0 8px 20px rgba(0,0,0,.22)!important;
     pointer-events:auto;
   }
   #detailBackBtn{
