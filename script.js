@@ -57,11 +57,9 @@ const coverStartBtn=document.getElementById('coverStartBtn');
 const introVideo=document.getElementById('introVideo');
 const playIntroBtn=document.getElementById('playIntroBtn');
 const skipIntroBtn=document.getElementById('skipIntroBtn');
-const goGrowthBtn=document.getElementById('goGrowthBtn');
 const growthVideo=document.getElementById('growthVideo');
 const playGrowthBtn=document.getElementById('playGrowthBtn');
 const skipGrowthBtn=document.getElementById('skipGrowthBtn');
-const showPartsBtn=document.getElementById('showPartsBtn');
 const partsImage=document.getElementById('partsImage');
 const challengeImage=document.getElementById('challengeImage');
 const quizImage=document.getElementById('quizImage');
@@ -222,9 +220,8 @@ playIntroBtn.onclick=async()=>{
     playIntroBtn.classList.remove('hidden');
   }
 };
-introVideo.onended=()=>goGrowthBtn.classList.remove('hidden');
-introVideo.onerror=()=>goGrowthBtn.classList.remove('hidden');
-goGrowthBtn.onclick=()=>showScreen('growthScreen');
+introVideo.onended=()=>showScreen('growthScreen');
+introVideo.onerror=()=>showScreen('growthScreen');
 skipIntroBtn.onclick=()=>{
   try{introVideo.pause();}catch(e){}
   showScreen('growthScreen');
@@ -238,10 +235,9 @@ playGrowthBtn.onclick=async()=>{
     playGrowthBtn.classList.remove('hidden');
   }
 };
-growthVideo.onended=()=>{stopGrowthMusic();showPartsBtn.classList.remove('hidden')};
-growthVideo.onerror=()=>{stopGrowthMusic();showPartsBtn.classList.remove('hidden')};
+growthVideo.onended=()=>{stopGrowthMusic();showScreen('partsScreen')};
+growthVideo.onerror=()=>{stopGrowthMusic();showScreen('partsScreen')};
 growthVideo.addEventListener('pause',()=>{if(!growthVideo.ended)stopGrowthMusic()});
-showPartsBtn.onclick=()=>{stopGrowthMusic();showScreen('partsScreen')};
 skipGrowthBtn.onclick=()=>{
   try{growthVideo.pause();}catch(e){}
   stopGrowthMusic();
