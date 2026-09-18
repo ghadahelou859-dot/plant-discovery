@@ -20,7 +20,7 @@ function layoutMappedElements(screenId,imageId){
   const ch=screen.clientHeight;
   const nw=image.naturalWidth;
   const nh=image.naturalHeight;
-  const scale=Math.max(cw/nw,ch/nh);
+  const scale=isPortraitMobile()?Math.min(cw/nw,ch/nh):Math.max(cw/nw,ch/nh);
   const renderedW=nw*scale;
   const renderedH=nh*scale;
   const offsetX=(cw-renderedW)/2;
