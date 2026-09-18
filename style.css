@@ -57,8 +57,11 @@ body{min-height:100dvh}
 @media (max-width:700px){.like-btn{right:8px;width:52px;height:72px}.detail-nav{width:100%;padding:0 8px;gap:7px}.detail-nav .secondary-btn{font-size:14px;padding:11px 9px}.question-box{font-size:clamp(15px,4vw,22px);padding:4px}.quiz-progress{font-size:clamp(11px,3vw,16px)}.quiz-timer{font-size:clamp(20px,6vw,34px)}.feedback{font-size:clamp(13px,3.6vw,19px)}.answer-btn .label{font-size:clamp(10px,2.8vw,14px)}}
 @media (orientation:portrait){.score-number{font-size:clamp(42px,11vw,86px)}}
 @media (orientation:portrait) and (max-width:700px){
+  #coverScreen,#partsScreen,#detailScreen,#challengeScreen,#quizScreen,#resultScreen{
+    background:#eef6e8;
+  }
   #coverImage,#partsImage,#detailImage,#challengeImage,#quizImage,#resultImage{
-    object-fit:cover!important;
+    object-fit:contain!important;
     object-position:center center!important;
   }
   .detail-nav{
