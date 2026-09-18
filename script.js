@@ -91,8 +91,7 @@ const responsiveVideos=[introVideo,growthVideo];
 
 function syncResponsiveVideo(video,portrait){
   if(!video)return;
-  if(portrait && video.dataset.mobilePoster) video.setAttribute('poster',video.dataset.mobilePoster);
-  else video.removeAttribute('poster');
+  video.removeAttribute('poster');
   const target=portrait?video.dataset.mobileSrc:video.dataset.desktopSrc;
   if(!target||video.dataset.activeSrc===target)return;
   const resume=!video.paused&&!video.ended;
