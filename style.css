@@ -224,3 +224,38 @@ body{min-height:100dvh}
     font-size:clamp(11px,3.2vw,15px)!important;
   }
 }
+
+@media (orientation:portrait) and (max-width:700px){
+  #questionBox{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    text-align:center!important;
+    padding:8px 16px!important;
+  }
+  #questionText{
+    width:100%!important;
+    text-align:center!important;
+    margin:0!important;
+  }
+  #answers{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-rows:repeat(2,minmax(0,1fr))!important;
+    gap:4% 7%!important;
+    align-items:center!important;
+    justify-items:center!important;
+  }
+  #answers .answer-btn{
+    width:86%!important;
+  }
+  #answers .answer-btn .icon-shell{
+    width:86%!important;
+    height:86%!important;
+  }
+  #feedback{
+    color:#fff!important;
+    background:transparent!important;
+    text-shadow:0 2px 4px rgba(0,0,0,.6)!important;
+    font-weight:900!important;
+  }
+}
