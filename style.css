@@ -259,3 +259,51 @@ body{min-height:100dvh}
     font-weight:900!important;
   }
 }
+
+@media (orientation:portrait) and (max-width:700px){
+  #answers{
+    overflow:visible!important;
+  }
+  #answers .answer-btn{
+    width:84%!important;
+    aspect-ratio:1/1!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    overflow:visible!important;
+    position:relative!important;
+  }
+  #answers .answer-btn .icon-shell{
+    width:82%!important;
+    height:82%!important;
+    position:relative!important;
+    top:-4%!important;
+    flex:0 0 auto!important;
+  }
+  #answers .answer-btn img.option-img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:contain!important;
+    object-position:center center!important;
+  }
+  #answers .answer-btn .label{
+    position:absolute!important;
+    left:50%!important;
+    top:91%!important;
+    transform:translateX(-50%)!important;
+    width:95%!important;
+    height:17%!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    text-align:center!important;
+    line-height:1!important;
+    font-size:clamp(11px,3vw,15px)!important;
+    font-weight:900!important;
+    color:#2f2418!important;
+    white-space:nowrap!important;
+    text-shadow:none!important;
+    margin:0!important;
+    padding:0!important;
+  }
+}
