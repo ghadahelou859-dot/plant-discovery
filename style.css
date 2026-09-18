@@ -307,3 +307,34 @@ body{min-height:100dvh}
     padding:0!important;
   }
 }
+
+@media (orientation:portrait) and (max-width:700px){
+  #timerClock{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    padding:0!important;
+  }
+  #timerNum{
+    display:block!important;
+    width:100%!important;
+    text-align:center!important;
+    line-height:1!important;
+    transform:translate(2%,1%)!important;
+  }
+
+  #answers .answer-btn{
+    width:92%!important;
+  }
+  #answers .answer-btn .icon-shell{
+    width:96%!important;
+    height:96%!important;
+    top:-8%!important;
+  }
+  #answers .answer-btn .label{
+    top:98%!important;
+    width:100%!important;
+    height:20%!important;
+    font-size:clamp(11px,3.1vw,15px)!important;
+  }
+}
