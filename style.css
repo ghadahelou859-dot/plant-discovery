@@ -460,8 +460,3 @@ body{min-height:100dvh}
   }
 }
 
-@media (orientation:portrait) and (max-width:700px){
-  .fullscreen-video.mobile-awaiting-play{
-    visibility:hidden!important;
-  }
-}
