@@ -85,6 +85,25 @@ const likeBtn=document.getElementById('likeBtn');
 const likeCount=document.getElementById('likeCount');
 
 const responsiveImages=[coverImage,partsImage,challengeImage,quizImage,resultImage];
+const responsiveVideos=[introVideo,growthVideo];
+
+function syncResponsiveVideo(video,portrait){
+  if(!video)return;
+  const target=portrait?video.dataset.mobileSrc:video.dataset.desktopSrc;
+  if(!target||video.dataset.activeSrc===target)return;
+  const resume=!video.paused&&!video.ended;
+  const previousTime=Number.isFinite(video.currentTime)?video.currentTime:0;
+  video.pause();
+  video.src=target;
+  video.dataset.activeSrc=target;
+  video.load();
+  if(resume){
+    video.addEventListener('loadedmetadata',()=>{
+      try{video.currentTime=Math.min(previousTime,Math.max(0,(video.duration||previousTime)-.05));}catch(e){}
+      video.play().catch(()=>{});
+    },{once:true});
+  }
+}
 
 function syncResponsiveAssets(){
   const portrait=isPortraitMobile();
@@ -93,6 +112,7 @@ function syncResponsiveAssets(){
     const target=portrait?img.dataset.mobileSrc:img.dataset.desktopSrc;
     if(target && img.getAttribute('src')!==target)img.setAttribute('src',target);
   });
+  responsiveVideos.forEach(video=>syncResponsiveVideo(video,portrait));
   if(typeof currentPartIndex==='number' && parts?.[currentPartIndex]){
     const target=portrait?parts[currentPartIndex].mobileImage:parts[currentPartIndex].image;
     if(detailImage.getAttribute('src')!==target)detailImage.setAttribute('src',target);
