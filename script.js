@@ -216,11 +216,9 @@ function stopGrowthMusic(){
 coverStartBtn.onclick=()=>showScreen('videoScreen');
 playIntroBtn.onclick=async()=>{
   playIntroBtn.classList.add('hidden');
-  introVideo.classList.remove('mobile-awaiting-play');
   introVideo.currentTime=0;
   try{await introVideo.play();}
   catch{
-    introVideo.classList.add('mobile-awaiting-play');
     playIntroBtn.classList.remove('hidden');
   }
 };
@@ -229,17 +227,14 @@ introVideo.onerror=()=>goGrowthBtn.classList.remove('hidden');
 goGrowthBtn.onclick=()=>showScreen('growthScreen');
 skipIntroBtn.onclick=()=>{
   try{introVideo.pause();}catch(e){}
-  if(isPortraitMobile())growthVideo.classList.add('mobile-awaiting-play');
   showScreen('growthScreen');
 };
 playGrowthBtn.onclick=async()=>{
   playGrowthBtn.classList.add('hidden');
-  growthVideo.classList.remove('mobile-awaiting-play');
   growthVideo.currentTime=0;
   try{startGrowthMusic();await growthVideo.play();}
   catch{
     stopGrowthMusic();
-    growthVideo.classList.add('mobile-awaiting-play');
     playGrowthBtn.classList.remove('hidden');
   }
 };
@@ -476,10 +471,6 @@ function playClap(){
 }
 
 syncResponsiveAssets();
-if(isPortraitMobile()){
-  introVideo.classList.add('mobile-awaiting-play');
-  growthVideo.classList.add('mobile-awaiting-play');
-}
 recordView();
 refreshLike();
 layoutAllMappedElements();
