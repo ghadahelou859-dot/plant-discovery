@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ghada Analytics Dashboard</title>
+<style>
+:root{--bg:#fcfafc;--card:#fff;--line:#ead9e6;--text:#342b33;--muted:#8f7d89;--pink:#c88fa6;--pink2:#f6eaf0}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fffcff,#f7f1f6);font-family:Arial,Tahoma,sans-serif;color:var(--text)}
+.wrap{max-width:980px;margin:auto;padding:18px}.hero,.panel{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;margin-bottom:14px}
+.hero{display:flex;justify-content:space-between;gap:16px;align-items:center}.hero h1{margin:0 0 6px;font-size:28px}.muted{color:var(--muted);font-size:14px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:11px 16px;cursor:pointer;background:var(--pink);color:white;font-weight:700}.btn.alt{background:white;color:var(--text);border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fffafd}.cover{height:130px;background:linear-gradient(135deg,#fff8fc,#eee5f0);display:flex;align-items:end;padding:12px;background-size:cover;background-position:center}.body{padding:12px}.stats{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.modal{position:fixed;inset:0;background:#33252d55;display:none;align-items:center;justify-content:center;padding:16px}.modal.open{display:flex}.box{width:min(620px,100%);max-height:90vh;overflow:auto;background:white;border-radius:24px;padding:18px}
+.top{display:flex;justify-content:space-between;align-items:center}.x{border:1px solid var(--line);background:white;width:40px;height:40px;border-radius:50%;font-size:22px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field input,.field select{min-height:44px;border:1px solid var(--line);border-radius:13px;padding:10px;font:inherit}.notice{margin-top:10px;padding:10px;border-radius:12px;display:none}.notice.show{display:block}.ok{background:#edf8f3;color:#345f4e}.err{background:#fff0f3;color:#8a4353}
+.preview{height:160px;border:1px dashed #d9b9c7;border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff9fc;cursor:pointer}.preview img{width:100%;height:100%;object-fit:cover;display:none}
+code{display:block;direction:ltr;background:#fff7fb;border:1px solid var(--line);border-radius:12px;padding:10px;overflow:auto}
+@media(max-width:720px){.hero{display:block}.actions{margin-top:12px}.grid,.form{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div><div class="muted">Inviteation by Ghada</div><h1>لوحة إدارة المشاريع</h1><div id="status" class="muted">غير مسجل دخول.</div></div>
+    <div class="actions">
+      <button id="addBtn" class="btn">+ إضافة مشروع</button>
+      <button id="loginBtn" class="btn alt">تسجيل دخول</button>
+      <button id="logoutBtn" class="btn alt" style="display:none">تسجيل خروج</button>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="top"><div><b>المشاريع</b><div class="muted">المشاريع المسجلة في قاعدة الإحصائيات.</div></div><button id="refreshBtn" class="btn alt">تحديث</button></div>
+    <div id="projects" class="grid" style="margin-top:14px"></div>
+  </section>
+</div>
+
+<div id="loginModal" class="modal"><div class="box">
+  <div class="top"><div><b style="font-size:22px">دخول الإدارة</b><div class="muted">سجلي بحساب Supabase.</div></div><button class="x" data-close="loginModal">×</button></div>
+  <div class="form">
+    <div class="field full"><label>البريد</label><input id="email" type="email"></div>
+    <div class="field full"><label>كلمة المرور</label><input id="password" type="password"></div>
+  </div>
+  <div class="actions" style="margin-top:14px"><button id="doLogin" class="btn">دخول</button><button id="doSignup" class="btn alt">إنشاء حساب أول مرة</button></div>
+  <div id="loginNotice" class="notice"></div>
+</div></div>
+
+<div id="addModal" class="modal"><div class="box">
+  <div class="top"><div><b style="font-size:22px">إضافة مشروع جديد</b><div class="muted">ينحفظ مباشرة في Supabase.</div></div><button class="x" data-close="addModal">×</button></div>
+  <div class="form">
+    <div class="field full"><label>صورة الغلاف</label><div id="picker" class="preview"><input id="cover" type="file" accept="image/*" hidden><img id="preview"><span id="hint">اضغطي لاختيار صورة</span></div></div>
+    <div class="field"><label>اسم المشروع</label><input id="title"></div>
+    <div class="field"><label>النوع</label><select id="type"><option value="invitation">كرت / دعوة</option><option value="lesson">درس</option><option value="interactive_page">صفحة تفاعلية</option><option value="other">أخرى</option></select></div>
+    <div class="field"><label>Slug</label><input id="slug"></div>
+    <div class="field"><label>رابط المشروع</label><input id="url" type="url" placeholder="https://..."></div>
+  </div>
+  <div class="actions" style="margin-top:14px"><button id="saveBtn" class="btn">حفظ وربط</button></div>
+  <div id="saveNotice" class="notice"></div>
+  <div id="tracking" style="display:none;margin-top:12px"><b>كود الربط:</b><code id="trackingCode"></code></div>
+</div></div>
+
+<script>
+const SB='https://jzswtwicvgppisasrkqe.supabase.co', KEY='sb_publishable_qJGOZoWBOrZ952qJnYTqNg_oaMSIStu', SK='ghada_admin_session';
+const $=id=>document.getElementById(id);
+function session(){try{return JSON.parse(localStorage.getItem(SK)||'null')}catch{return null}}
+function setSession(v){v?localStorage.setItem(SK,JSON.stringify(v)):localStorage.removeItem(SK);authUI()}
+function authUI(){const s=session(),on=!!s?.access_token;$('loginBtn').style.display=on?'none':'inline-block';$('logoutBtn').style.display=on?'inline-block':'none';$('status').textContent=on?'✓ وضع الإدارة مفعّل':'غير مسجل دخول.'}
+function note(el,msg,ok=false){el.className='notice show '+(ok?'ok':'err');el.textContent=msg}
+function open(id){$(id).classList.add('open')} function close(id){$(id).classList.remove('open')}
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>close(b.dataset.close));
+document.querySelectorAll('.modal').forEach(m=>m.onclick=e=>{if(e.target===m)close(m.id)});
+async function auth(path,body){const r=await fetch(SB+path,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.msg||j.message||j.error_description||'تعذر الاتصال');return j}
+$('loginBtn').onclick=()=>open('loginModal');$('logoutBtn').onclick=()=>{setSession(null);$('projects').innerHTML=''};
+$('doLogin').onclick=async()=>{try{const j=await auth('/auth/v1/token?grant_type=password',{email:$('email').value.trim(),password:$('password').value});setSession(j);note($('loginNotice'),'تم تسجيل الدخول.',true);setTimeout(()=>{close('loginModal');loadProjects()},300)}catch(e){note($('loginNotice'),e.message)}};
+$('doSignup').onclick=async()=>{try{const j=await auth('/auth/v1/signup',{email:$('email').value.trim(),password:$('password').value});if(j.access_token){setSession(j);note($('loginNotice'),'تم إنشاء الحساب والدخول.',true)}else note($('loginNotice'),'تم إنشاء الحساب. افحصي البريد للتأكيد ثم سجلي الدخول.',true)}catch(e){note($('loginNotice'),e.message)}};
+function slugify(v){return v.trim().toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-+|-+$/g,'').slice(0,80)}
+$('title').oninput=e=>{if(!$('slug').dataset.edited)$('slug').value=slugify(e.target.value)};$('slug').oninput=e=>$('slug').dataset.edited=e.target.value?'1':'';
+$('addBtn').onclick=()=>{if(!session()?.access_token){open('loginModal');note($('loginNotice'),'سجلي الدخول أولًا.');return} $('tracking').style.display='none';open('addModal')};
+$('picker').onclick=()=>$('cover').click();$('cover').onchange=()=>{const f=$('cover').files?.[0];if(!f)return;const u=URL.createObjectURL(f);$('preview').src=u;$('preview').style.display='block';$('hint').style.display='none'};
+async function save(){
+ const s=session();if(!s?.access_token)return;
+ const title=$('title').value.trim(),type=$('type').value,slug=$('slug').value.trim()||slugify(title)||('project-'+Date.now().toString(36)),url=$('url').value.trim();
+ if(!title)return note($('saveNotice'),'اسم المشروع مطلوب.');
+ const r=await fetch(SB+'/rest/v1/analytics_projects',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+s.access_token,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({slug,title,project_type:type,project_url:url||null,is_active:true})});
+ if(!r.ok){const j=await r.json().catch(()=>({}));if(r.status===401)setSession(null);return note($('saveNotice'),j.message||j.hint||'تعذر حفظ المشروع.')}
+ note($('saveNotice'),'✓ تم حفظ المشروع في قاعدة البيانات.',true);$('trackingCode').textContent='GhadaAnalytics.init({ projectSlug: "'+slug+'", pageKey: "main" });';$('tracking').style.display='block';loadProjects();
+}
+$('saveBtn').onclick=save;$('refreshBtn').onclick=loadProjects;
+async function loadProjects(){
+ const s=session();if(!s?.access_token){$('projects').innerHTML='<div class="muted">سجلي الدخول لعرض المشاريع.</div>';return}
+ const r=await fetch(SB+'/rest/v1/analytics_projects?select=id,slug,title,project_type,project_url,cover_image_url,is_active,created_at&order=created_at.desc',{headers:{apikey:KEY,Authorization:'Bearer '+s.access_token}});
+ if(!r.ok){$('projects').innerHTML='<div class="muted">تعذر تحميل المشاريع.</div>';return}
+ const rows=await r.json();$('projects').innerHTML=rows.map(p=>'<div class="card"><div class="cover"'+(p.cover_image_url?' style="background-image:url(\''+p.cover_image_url+'\')"':'')+'><span class="muted">'+(p.project_type||'مشروع')+'</span></div><div class="body"><b>'+p.title+'</b><div class="stats"><span>'+p.slug+'</span></div></div></div>').join('')||'<div class="muted">لا يوجد مشاريع.</div>'
+}
+authUI();loadProjects();
+</script>
+</body></html>
